@@ -4,3 +4,4 @@ dist
 __pycache__/
 lab/out/
 .pytest_cache/
+.netlify/
