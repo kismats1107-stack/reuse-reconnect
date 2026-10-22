@@ -191,6 +191,7 @@ export function App() {
           }}
           onOpenLab={() => go("lab")}
           reduced={reduced}
+          theme={theme}
         />
       </div>
     );

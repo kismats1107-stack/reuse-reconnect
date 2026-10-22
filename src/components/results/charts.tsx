@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { useElementSize } from "../../hooks/useElementSize";
+import { useInView } from "../../hooks/useInView";
 
 export type Series = {
   key: string;
@@ -54,6 +55,7 @@ type LineProps = {
 export function LineChart({ series, height = 240, xTicks, xLabel, yFormat, xFormat = String, markX, markLabel, ariaLabel }: LineProps) {
   const [ref, { width }] = useElementSize<HTMLDivElement>();
   const [hx, setHx] = useState<number | null>(null);
+  const [view, seen] = useInView<HTMLDivElement>();
   const W = Math.max(width, 260);
   const m = { l: 58, r: 14, t: 12, b: 38 };
   const iw = W - m.l - m.r;
@@ -68,6 +70,7 @@ export function LineChart({ series, height = 240, xTicks, xLabel, yFormat, xForm
   const y = (v: number) => m.t + ih - (Math.max(0, v) / yMax) * ih;
 
   return (
+    <div ref={view} className={seen ? "is-in" : ""}>
     <div ref={ref} className="relative">
       {width > 0 && (
         <svg
@@ -110,6 +113,7 @@ export function LineChart({ series, height = 240, xTicks, xLabel, yFormat, xForm
               )}
             </g>
           )}
+          <g className="reveal-x">
           {series.map((s) =>
             s.noLine ? null : (
               <path
@@ -124,6 +128,7 @@ export function LineChart({ series, height = 240, xTicks, xLabel, yFormat, xForm
             ),
           )}
           {series.map((s) => (s.dots ? s.points.map((p) => <circle key={`${s.key}-${p.x}`} cx={x(p.x)} cy={y(p.y)} r={4.5} fill={s.color} stroke="var(--color-surface)" strokeWidth={2} />) : null))}
+          </g>
           {hx !== null && (
             <g pointerEvents="none">
               <line x1={x(hx)} x2={x(hx)} y1={m.t} y2={m.t + ih} stroke="var(--color-muted)" strokeOpacity={0.6} />
@@ -153,6 +158,7 @@ export function LineChart({ series, height = 240, xTicks, xLabel, yFormat, xForm
         </div>
       )}
     </div>
+    </div>
   );
 }
 
@@ -162,6 +168,7 @@ type Group = { label: string; values: { key: string; label: string; value: numbe
 export function BarChart({ groups, height = 240, yFormat, ariaLabel, highlight }: { groups: Group[]; height?: number; yFormat: (v: number) => string; ariaLabel: string; highlight?: string }) {
   const [ref, { width }] = useElementSize<HTMLDivElement>();
   const [hover, setHover] = useState<string | null>(null);
+  const [view, seen] = useInView<HTMLDivElement>();
   const W = Math.max(width, 260);
   const m = { l: 58, r: 10, t: 22, b: 40 };
   const iw = W - m.l - m.r;
@@ -175,6 +182,7 @@ export function BarChart({ groups, height = 240, yFormat, ariaLabel, highlight }
   const bw = Math.min(34, (gw * 0.7) / n);
 
   return (
+    <div ref={view} className={seen ? "is-in" : ""}>
     <div ref={ref}>
       {width > 0 && (
         <svg width={W} height={height} className="block" role="img" aria-label={ariaLabel}>
@@ -197,7 +205,7 @@ export function BarChart({ groups, height = 240, yFormat, ariaLabel, highlight }
                   const id = `${g.label}-${v.key}`;
                   const h = Math.max(0, y(0) - y(v.value));
                   return (
-                    <g key={v.key} onMouseEnter={() => setHover(id)} onMouseLeave={() => setHover(null)}>
+                    <g key={v.key} className="reveal-y" style={{ transitionDelay: `${gi * 90}ms` }} onMouseEnter={() => setHover(id)} onMouseLeave={() => setHover(null)}>
                       <path
                         d={h > 4 ? `M${bx} ${y(0)} V${y(v.value) + 4} q0 -4 4 -4 H${bx + bw - 6} q4 0 4 4 V${y(0)} Z` : `M${bx} ${y(0)} h${bw - 2} v${-h} h${-(bw - 2)} Z`}
                         fill={v.color}
@@ -222,6 +230,7 @@ export function BarChart({ groups, height = 240, yFormat, ariaLabel, highlight }
         </svg>
       )}
     </div>
+    </div>
   );
 }
 
@@ -230,16 +239,17 @@ type Stack = { label: string; total: number; parts: { key: string; label: string
 /** Horizontal stacked bars on one shared axis. */
 export function StackBars({ rows, format }: { rows: Stack[]; format: (v: number) => string }) {
   const max = Math.max(...rows.map((r) => r.total), 1);
+  const [view, seen] = useInView<HTMLDivElement>();
   const fill = (c: string, striped?: boolean) => (striped ? `repeating-linear-gradient(135deg, ${c} 0 4px, color-mix(in oklab, ${c} 65%, black) 4px 7px)` : c);
   return (
-    <div className="grid gap-4">
+    <div ref={view} className={`grid gap-4 ${seen ? "is-in" : ""}`}>
       {rows.map((r) => (
         <div key={r.label}>
           <p className="mb-1.5 flex justify-between text-sm">
             <span className="text-muted">{r.label}</span>
             <span className="font-mono font-semibold text-text">{format(r.total)}</span>
           </p>
-          <div className="flex h-7 gap-[2px]" style={{ width: `${(r.total / max) * 100}%` }}>
+          <div className="reveal-x flex h-7 gap-[2px]" style={{ width: `${(r.total / max) * 100}%` }}>
             {r.parts
               .filter((p) => p.value > 0)
               .map((p, i, arr) => (

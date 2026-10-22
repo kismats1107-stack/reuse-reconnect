@@ -3,7 +3,9 @@ import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { useEffect, useState, type ReactNode } from "react";
 import type { RunRecord } from "../../lib/history";
+import type { Theme } from "../scene/theme";
 import { Overview } from "./Overview";
+import { ResultHero } from "./ResultHero";
 import { RealMeasurement } from "./RealMeasurement";
 import { RunHistory } from "./RunHistory";
 import { StudyNotes } from "./StudyNotes";
@@ -16,10 +18,11 @@ type Props = {
   onClearHistory: () => void;
   onOpenLab: () => void;
   reduced: boolean;
+  theme: Theme;
 };
 
 /** The Results page: model results, the student's own runs, real measurements, and study notes. */
-export function ResultsPage({ objects, rttMs, history, solved, onClearHistory, onOpenLab, reduced }: Props) {
+export function ResultsPage({ objects, rttMs, history, solved, onClearHistory, onOpenLab, reduced, theme }: Props) {
   // Eased, momentum-style scrolling for this long page (off for reduced motion).
   useEffect(() => {
     if (reduced) return;
@@ -30,7 +33,7 @@ export function ResultsPage({ objects, rttMs, history, solved, onClearHistory, o
   const [rtt, setRtt] = useState(rttMs);
   return (
     <main className="mx-auto w-full max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8">
-      <header className="mb-10 flex flex-wrap items-end justify-between gap-4">
+      <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-3xl">
           <p className="eyebrow mb-3 flex items-center gap-3">
             <span aria-hidden="true" className="h-px w-8 bg-cyan" /> Experiment 01 · Results
@@ -47,8 +50,10 @@ export function ResultsPage({ objects, rttMs, history, solved, onClearHistory, o
         </button>
       </header>
 
-      <Section index="01" title="At a glance" lead="Pick a page size and a server distance. Every number and chart below updates.">
-        <Overview objects={n} rttMs={rtt} onObjects={setN} onRtt={setRtt} />
+      <ResultHero objects={n} rttMs={rtt} onObjects={setN} onRtt={setRtt} theme={theme} reduced={reduced} />
+
+      <Section index="01" title="At a glance" lead="The same setting in numbers and charts. Change it in the picker above.">
+        <Overview objects={n} rttMs={rtt} />
       </Section>
 
       <Section index="02" title="Your experiments" lead="Races you finished in the 3D lab, and your challenge progress.">
@@ -59,8 +64,8 @@ export function ResultsPage({ objects, rttMs, history, solved, onClearHistory, o
         <RealMeasurement />
       </Section>
 
-      <Section index="04" title="Study notes" lead="Everything you need to remember, with every packet drawn step by step.">
-        <StudyNotes />
+      <Section index="04" title="Study notes" lead="Press play to watch every packet, then flip the cards to check the words.">
+        <StudyNotes objects={n} rttMs={rtt} />
       </Section>
 
       <footer className="mt-16 border-t border-line pt-6 font-mono text-xs text-faint">REUSE / RECONNECT · HTTP Keep-Alive vs New-Connection Requests · Computer Networks</footer>

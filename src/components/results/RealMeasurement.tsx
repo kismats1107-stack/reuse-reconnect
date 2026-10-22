@@ -26,6 +26,7 @@ const countsAgree = runs.every((r) =>
  */
 export function RealMeasurement() {
   const [rtt, setRtt] = useState(RTTS.includes(50) ? 50 : RTTS[RTTS.length - 1]);
+  const [open, setOpen] = useState(false);
   const model = (s: "close" | "keepalive") => NS.map((n) => ({ x: n, y: simulate(s, n, rtt).loadMs }));
   const measured = (s: "close" | "keepalive") => NS.map((n) => ({ x: n, y: get(s, n, rtt).loadMs.median }));
   const emulated = rtt > 0;
@@ -39,7 +40,7 @@ export function RealMeasurement() {
         <Fact big={new Date(data.generatedAt).toLocaleDateString()} label="recorded" sub={`${data.host.os} · Python ${data.host.python}`} />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+      <div className={`grid gap-4 ${open ? "lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]" : ""}`}>
         <CyberCard className="p-5">
           <ChartCard
             title="Measured vs model"
@@ -78,9 +79,13 @@ export function RealMeasurement() {
               yFormat={ms}
               ariaLabel={`Measured and modelled load times at ${rtt} ms for ${NS.join(", ")} files.`}
             />
+            <button type="button" className="mt-1 w-fit font-mono text-xs text-cyan underline-offset-4 hover:underline" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+              {open ? "Hide the numbers" : "Show the numbers →"}
+            </button>
           </ChartCard>
         </CyberCard>
 
+        {open && (
         <CyberCard className="p-5">
           <p className="mb-3 font-display text-lg font-semibold">Measured medians · {rtt} ms</p>
           <table className="w-full border-collapse font-mono text-[0.8rem]">
@@ -112,9 +117,10 @@ export function RealMeasurement() {
             </tbody>
           </table>
           <p className="mt-3 text-xs leading-relaxed text-faint">
-            Median of {runs[0].repetitions} runs each. “Conns” are counted from the SYN packets Wireshark captured. Capture file: <code className="text-muted">lab/out/</code>
+            Median of {runs[0].repetitions} runs each. “Conns” are counted from the SYN packets Wireshark captured. Capture file: <code className="text-muted">evidence/</code>
           </p>
         </CyberCard>
+        )}
       </div>
     </div>
   );

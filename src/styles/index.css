@@ -411,6 +411,66 @@
   }
 }
 
+/* ---------- flip cards (glossary) ---------- */
+.flip {
+  perspective: 900px;
+  cursor: pointer;
+}
+.flip-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 520ms var(--ease-out-soft);
+}
+.flip[aria-pressed="true"] .flip-inner {
+  transform: rotateY(180deg);
+}
+.flip-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0.7rem 0.8rem;
+  backface-visibility: hidden;
+  transition: border-color 150ms;
+}
+.flip:hover .flip-face {
+  border-color: var(--color-cyan);
+}
+.flip-back {
+  transform: rotateY(180deg);
+  justify-content: center;
+}
+
+/* ---------- charts draw themselves in when scrolled into view ---------- */
+.reveal-x {
+  transform-box: fill-box;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 1.3s var(--ease-out-soft);
+}
+.reveal-y {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  transform: scaleY(0);
+  transition: transform 0.9s var(--ease-out-soft);
+}
+.is-in .reveal-x {
+  transform: scaleX(1);
+}
+.is-in .reveal-y {
+  transform: scaleY(1);
+}
+
+@media print {
+  .reveal-x,
+  .reveal-y {
+    transform: none !important;
+  }
+}
+
 @keyframes blink {
   50% {
     opacity: 0.25;

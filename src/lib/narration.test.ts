@@ -49,3 +49,18 @@ describe("challenges", () => {
     expect(done(10, 50)).toEqual([]);
   });
 });
+
+import { segments } from "./segments";
+describe("tower segments", () => {
+  it("add up exactly to the load time, with one handshake per connection", () => {
+    for (const s of ["close", "keepalive"] as const) {
+      for (const [n, rtt] of [[1, 50], [10, 50], [40, 100], [5, 0]]) {
+        const run = simulate(s, n, rtt);
+        const seg = segments(run);
+        expect(seg.reduce((a, x) => a + x.durMs, 0)).toBeCloseTo(run.loadMs, 9);
+        expect(seg.filter((x) => x.kind === "handshake")).toHaveLength(s === "close" ? n : 1);
+        expect(seg.filter((x) => x.kind === "request")).toHaveLength(n);
+      }
+    }
+  });
+});

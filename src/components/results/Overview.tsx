@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 import { ms, pct } from "../../lib/format";
 import { breakdown, compare, metricsAt } from "../../lib/metrics";
-import { MAX_OBJECTS, OBJECT_PRESETS, RTT_PRESETS, simulate } from "../../lib/simulation";
+import { MAX_OBJECTS, RTT_PRESETS, simulate } from "../../lib/simulation";
 import { CyberCard } from "../layout/CyberCard";
 import { BarChart, ChartCard, Legend, LineChart, StackBars } from "./charts";
 
@@ -9,10 +9,10 @@ const A = { label: "A · New connection", color: "var(--color-chart-cost)", dash
 const B = { label: "B · Keep-Alive", color: "var(--color-chart-lime)" };
 const DISTANCE: Record<number, string> = { 0: "same computer", 10: "nearby", 50: "other city", 100: "other country" };
 
-type Props = { objects: number; rttMs: number; onObjects: (n: number) => void; onRtt: (r: number) => void };
+type Props = { objects: number; rttMs: number };
 
-/** "At a glance" tiles and the four model charts for the chosen setting. */
-export function Overview({ objects, rttMs, onObjects, onRtt }: Props) {
+/** KPI tiles and the four model charts for the setting chosen in the hero. */
+export function Overview({ objects, rttMs }: Props) {
   const close = useMemo(() => simulate("close", objects, rttMs), [objects, rttMs]);
   const keep = useMemo(() => simulate("keepalive", objects, rttMs), [objects, rttMs]);
   const c = compare(close, keep);
@@ -40,32 +40,6 @@ export function Overview({ objects, rttMs, onObjects, onRtt }: Props) {
 
   return (
     <div className="grid gap-5">
-      {/* setting picker */}
-      <CyberCard className="p-4 sm:p-5">
-        <div className="grid gap-4 md:grid-cols-2">
-          <fieldset>
-            <legend className="eyebrow mb-2 text-[0.66rem]!">Files on the web page</legend>
-            <div className="seg" role="radiogroup" aria-label="Files on the web page">
-              {OBJECT_PRESETS.map((n) => (
-                <button key={n} type="button" role="radio" aria-checked={objects === n} onClick={() => onObjects(n)}>
-                  {n}
-                </button>
-              ))}
-            </div>
-          </fieldset>
-          <fieldset>
-            <legend className="eyebrow mb-2 text-[0.66rem]!">How far away is the server?</legend>
-            <div className="seg" role="radiogroup" aria-label="Server distance">
-              {RTT_PRESETS.map((r) => (
-                <button key={r} type="button" role="radio" aria-checked={rttMs === r} onClick={() => onRtt(r)}>
-                  {r} ms
-                </button>
-              ))}
-            </div>
-          </fieldset>
-        </div>
-      </CyberCard>
-
       {/* KPI tiles */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <Kpi label="Page load time" big={<><span className="text-cost">{ms(close.loadMs)}</span> <span className="text-faint">→</span> <span className="text-lime">{ms(keep.loadMs)}</span></>} sub="New connection → Keep-Alive" />
@@ -142,7 +116,7 @@ export function Overview({ objects, rttMs, onObjects, onRtt }: Props) {
   );
 }
 
-function Kpi({ label, big, sub }: { label: string; big: React.ReactNode; sub: string }) {
+function Kpi({ label, big, sub }: { label: string; big: ReactNode; sub: string }) {
   return (
     <CyberCard small className="p-4">
       <p className="font-mono text-[0.66rem] uppercase tracking-wider text-muted">{label}</p>

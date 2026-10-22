@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { Play, RotateCcw, SkipForward } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { connectionTimes } from "../../lib/connections";
 import { ms } from "../../lib/format";
 import { simulate } from "../../lib/simulation";
@@ -44,6 +45,34 @@ export function SequenceDiagrams() {
   const pxPerMs = 560 / close.endMs;
   const step = tickStep(close.endMs);
 
+  // Playback: one shared clock in simulated ms; null = everything drawn.
+  const [t, setT] = useState<number | null>(null);
+  const raf = useRef(0);
+  const play = () => {
+    cancelAnimationFrame(raf.current);
+    const dur = 6500; // real ms for the whole of diagram A
+    const t0 = performance.now();
+    const tick = (now: number) => {
+      const sim = ((now - t0) / dur) * close.endMs;
+      if (sim >= close.endMs) {
+        setT(null);
+        return;
+      }
+      setT(sim);
+      raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+  };
+  const stop = () => {
+    cancelAnimationFrame(raf.current);
+    setT(null);
+  };
+  useEffect(() => () => cancelAnimationFrame(raf.current), []);
+  const pick = (f: () => void) => () => {
+    stop();
+    f();
+  };
+
   return (
     <CyberCard className="p-5 sm:p-7">
       <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
@@ -58,7 +87,7 @@ export function SequenceDiagrams() {
             <legend className="eyebrow mb-1.5 text-[0.62rem]!">Files</legend>
             <div className="seg [&_button]:min-h-8! [&_button]:min-w-10!" role="radiogroup" aria-label="Files">
               {FILES.map((f) => (
-                <button key={f} type="button" role="radio" aria-checked={n === f} onClick={() => setN(f)}>
+                <button key={f} type="button" role="radio" aria-checked={n === f} onClick={pick(() => setN(f))}>
                   {f}
                 </button>
               ))}
@@ -68,7 +97,7 @@ export function SequenceDiagrams() {
             <legend className="eyebrow mb-1.5 text-[0.62rem]!">Server distance</legend>
             <div className="seg [&_button]:min-h-8! [&_button]:whitespace-nowrap" role="radiogroup" aria-label="Server distance">
               {RTTS.map((r) => (
-                <button key={r} type="button" role="radio" aria-checked={rtt === r} onClick={() => setRtt(r)}>
+                <button key={r} type="button" role="radio" aria-checked={rtt === r} onClick={pick(() => setRtt(r))}>
                   {r} ms
                 </button>
               ))}
@@ -76,26 +105,41 @@ export function SequenceDiagrams() {
           </fieldset>
         </div>
       </div>
-      <Legend className="mb-5" />
+      <div className="mb-5 flex flex-wrap items-center gap-3">
+        <button type="button" className="btn btn-primary" onClick={play}>
+          {t === null ? <Play size={16} aria-hidden="true" /> : <RotateCcw size={16} aria-hidden="true" />}
+          {t === null ? "Play the packets" : "Restart"}
+        </button>
+        {t !== null && (
+          <button type="button" className="btn btn-ghost" onClick={stop}>
+            <SkipForward size={16} aria-hidden="true" /> Show all
+          </button>
+        )}
+        <span className="font-mono text-sm text-muted tabular-nums" aria-live="off">
+          {t === null ? "" : `t = ${Math.round(t)} ms`}
+        </span>
+        <Legend className="ml-auto" />
+      </div>
       <div className="grid gap-8 md:grid-cols-2">
         <div>
           <p className="mb-2 flex items-center gap-2 font-mono text-xs tracking-widest text-cost">
             <span aria-hidden="true" className="inline-block h-2 w-2 rotate-45 bg-cost" /> A · NEW CONNECTION FOR EVERY FILE
           </p>
-          <Ladder run={close} pxPerMs={pxPerMs} step={step} title="New connection" />
+          <Ladder run={close} pxPerMs={pxPerMs} step={step} t={t} title="New connection" />
         </div>
         <div>
           <p className="mb-2 flex items-center gap-2 font-mono text-xs tracking-widest text-lime">
             <span aria-hidden="true" className="inline-block h-2 w-2 rotate-45 bg-lime" /> B · KEEP-ALIVE
           </p>
-          <Ladder run={keep} pxPerMs={pxPerMs} step={step} title="Keep-Alive" />
+          <Ladder run={keep} pxPerMs={pxPerMs} step={step} t={t} title="Keep-Alive" />
         </div>
       </div>
     </CyberCard>
   );
 }
 
-function Ladder({ run, pxPerMs, step, title }: { run: StrategyRun; pxPerMs: number; step: number; title: string }) {
+function Ladder({ run, pxPerMs, step, t, title }: { run: StrategyRun; pxPerMs: number; step: number; t: number | null; title: string }) {
+  const now = t ?? Infinity;
   const y = (t: number) => TOP + t * pxPerMs;
   const H = y(run.endMs) + 30;
   const conns = connectionTimes(run.events);
@@ -134,9 +178,9 @@ function Ladder({ run, pxPerMs, step, title }: { run: StrategyRun; pxPerMs: numb
       ))}
 
       {/* connection bands */}
-      {conns.map((c, i) => (
+      {conns.filter((c) => c.syn <= now).map((c, i) => (
         <g key={c.id}>
-          <rect x={CX} y={y(c.syn)} width={SX - CX} height={y(c.closed) - y(c.syn)} fill="var(--color-cyan)" opacity={i % 2 ? 0.035 : 0.065} />
+          <rect x={CX} y={y(c.syn)} width={SX - CX} height={y(Math.min(c.closed, now)) - y(c.syn)} fill="var(--color-cyan)" opacity={i % 2 ? 0.035 : 0.065} />
           <text x={SX + 6} y={y(c.syn) + 10} fontFamily="var(--font-mono)" fontSize={9} fill="var(--color-muted)">
             #{c.id}
           </text>
@@ -145,15 +189,19 @@ function Ladder({ run, pxPerMs, step, title }: { run: StrategyRun; pxPerMs: numb
 
       {/* packets */}
       {run.events
-        .filter((e) => e.type !== "CONNECTION_REUSE")
+        .filter((e) => e.type !== "CONNECTION_REUSE" && e.timeMs <= now)
         .map((e) => {
           const up = e.direction === "client-to-server";
+          // fraction of the arrow drawn so far (1 when not playing)
+          const p = e.arriveMs > e.timeMs ? Math.min(1, (now - e.timeMs) / (e.arriveMs - e.timeMs)) : 1;
           const kind = packetKind(e);
           const nudge = e.type === "HTTP_REQUEST" ? 4 : 0; // ACK and GET leave back to back
           const x1 = up ? CX : SX;
-          const x2 = up ? SX : CX;
+          const xEnd = up ? SX : CX;
           const y1 = y(e.timeMs) + nudge;
-          const y2 = y(e.arriveMs) + nudge;
+          const yEnd = y(e.arriveMs) + nudge;
+          const x2 = x1 + (xEnd - x1) * p;
+          const y2 = y1 + (yEnd - y1) * p;
           const f = labelAt(e);
           const label = e.type === "HTTP_REQUEST" ? `GET ${String((e.objectIndex ?? 0) + 1).padStart(2, "0")}` : e.type === "HTTP_RESPONSE" ? "200 OK" : e.label;
           return (
@@ -166,11 +214,13 @@ function Ladder({ run, pxPerMs, step, title }: { run: StrategyRun; pxPerMs: numb
                 stroke={KIND_CSS[kind]}
                 strokeWidth={kind === "teardown" ? 1 : 1.5}
                 strokeDasharray={kind === "teardown" ? "3 2" : undefined}
-                markerEnd={`url(#seq-${kind}-${run.strategy})`}
+                markerEnd={p >= 1 ? `url(#seq-${kind}-${run.strategy})` : undefined}
               />
+              {p < 1 && <circle cx={x2} cy={y2} r={4} fill={KIND_CSS[kind]} />}
+              {p >= 1 && (
               <text
-                x={x1 + (x2 - x1) * f}
-                y={y1 + (y2 - y1) * f - 4}
+                x={x1 + (xEnd - x1) * f}
+                y={y1 + (yEnd - y1) * f - 4}
                 textAnchor="middle"
                 fontFamily="var(--font-mono)"
                 fontSize={kind === "teardown" ? 8.5 : 9.5}
@@ -182,11 +232,15 @@ function Ladder({ run, pxPerMs, step, title }: { run: StrategyRun; pxPerMs: numb
               >
                 {label}
               </text>
+              )}
             </g>
           );
         })}
 
+      {t !== null && <line x1={CX - 12} x2={SX + 10} y1={y(now)} y2={y(now)} stroke="var(--color-muted)" strokeOpacity={0.35} />}
       {/* page loaded */}
+      {now >= run.loadMs && (
+      <>
       <line x1={CX - 12} x2={SX + 10} y1={y(run.loadMs)} y2={y(run.loadMs)} stroke="var(--color-text)" strokeDasharray="4 3" />
       <text x={SX + 14} y={y(run.loadMs) - 3} fontFamily="var(--font-mono)" fontSize={9} fontWeight={600} fill="var(--color-text)">
         loaded
@@ -194,6 +248,8 @@ function Ladder({ run, pxPerMs, step, title }: { run: StrategyRun; pxPerMs: numb
       <text x={SX + 14} y={y(run.loadMs) + 9} fontFamily="var(--font-mono)" fontSize={9} fill="var(--color-muted)">
         {ms(run.loadMs)}
       </text>
+      </>
+      )}
     </svg>
   );
 }
