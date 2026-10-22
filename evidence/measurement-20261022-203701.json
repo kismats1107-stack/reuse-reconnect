@@ -1,0 +1,2867 @@
+{
+  "schema": "reuse-reconnect/measurement@1",
+  "generatedAt": "2026-10-22T15:11:37+00:00",
+  "tool": "lab/run_experiment.py",
+  "host": {
+    "os": "Windows 11",
+    "python": "3.14.6",
+    "machine": "AMD64"
+  },
+  "method": {
+    "requests": "sequential, one object at a time",
+    "client": "raw sockets, TCP_NODELAY, no HTTP library",
+    "server": "Python http.server, HTTP/1.1, threaded",
+    "loopbackRtt": "real loopback (no added delay)",
+    "emulatedRtt": "userspace relay: +RTT/2 per direction, first request on a new connection held +1 RTT for the handshake",
+    "loadTime": "perf_counter from first connect to last response byte",
+    "assets": "shared/assets.json"
+  },
+  "capture": {
+    "enabled": true,
+    "tool": "Dumpcap (Wireshark) 4.6.8 (v4.6.8-0-ge677bf052328).",
+    "interface": "\\Device\\NPF_Loopback",
+    "file": "lab/out/capture-20261022-203701.pcapng"
+  },
+  "runs": [
+    {
+      "objects": 1,
+      "rttMs": 0.0,
+      "rttMode": "loopback",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 2.9640999855473638,
+        "p25": 2.7484999736770988,
+        "p75": 3.129499964416027,
+        "min": 2.168899984098971,
+        "max": 3.602699958719313
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 3.129499964416027,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 1,
+          "loadMs": 2.7484999736770988,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 2,
+          "loadMs": 2.168899984098971,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 3,
+          "loadMs": 3.602699958719313,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 4,
+          "loadMs": 2.9640999855473638,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        }
+      ]
+    },
+    {
+      "objects": 1,
+      "rttMs": 0.0,
+      "rttMode": "loopback",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 4.047199967317283,
+        "p25": 3.20759997703135,
+        "p75": 4.4006999814882874,
+        "min": 2.3938000667840242,
+        "max": 4.4701999286189675
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 4.4701999286189675,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 1,
+          "loadMs": 4.047199967317283,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 2,
+          "loadMs": 4.4006999814882874,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 3,
+          "loadMs": 2.3938000667840242,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 4,
+          "loadMs": 3.20759997703135,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        }
+      ]
+    },
+    {
+      "objects": 5,
+      "rttMs": 0.0,
+      "rttMode": "loopback",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 17.430700012482703,
+        "p25": 16.78349997382611,
+        "p75": 22.58410002104938,
+        "min": 8.911499986425042,
+        "max": 23.065400077030063
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 16.78349997382611,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 57
+        },
+        {
+          "rep": 1,
+          "loadMs": 23.065400077030063,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 56
+        },
+        {
+          "rep": 2,
+          "loadMs": 22.58410002104938,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 57
+        },
+        {
+          "rep": 3,
+          "loadMs": 17.430700012482703,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 57
+        },
+        {
+          "rep": 4,
+          "loadMs": 8.911499986425042,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 57
+        }
+      ]
+    },
+    {
+      "objects": 5,
+      "rttMs": 0.0,
+      "rttMode": "loopback",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 7.0723999524489045,
+        "p25": 6.415499956347048,
+        "p75": 8.013800019398332,
+        "min": 6.360200000926852,
+        "max": 8.376299985684454
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 6.360200000926852,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 29
+        },
+        {
+          "rep": 1,
+          "loadMs": 8.376299985684454,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 29
+        },
+        {
+          "rep": 2,
+          "loadMs": 6.415499956347048,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 29
+        },
+        {
+          "rep": 3,
+          "loadMs": 8.013800019398332,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 29
+        },
+        {
+          "rep": 4,
+          "loadMs": 7.0723999524489045,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 29
+        }
+      ]
+    },
+    {
+      "objects": 10,
+      "rttMs": 0.0,
+      "rttMode": "loopback",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 34.60130002349615,
+        "p25": 24.83490004669875,
+        "p75": 35.10209999512881,
+        "min": 21.90269995480776,
+        "max": 39.71169993747026
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 24.83490004669875,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 112
+        },
+        {
+          "rep": 1,
+          "loadMs": 34.60130002349615,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 111
+        },
+        {
+          "rep": 2,
+          "loadMs": 21.90269995480776,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 113
+        },
+        {
+          "rep": 3,
+          "loadMs": 39.71169993747026,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 113
+        },
+        {
+          "rep": 4,
+          "loadMs": 35.10209999512881,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 115
+        }
+      ]
+    },
+    {
+      "objects": 10,
+      "rttMs": 0.0,
+      "rttMode": "loopback",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 11.412700056098402,
+        "p25": 9.134600055404007,
+        "p75": 14.71100002527237,
+        "min": 7.528899936005473,
+        "max": 15.273500001057982
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 7.528899936005473,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 51
+        },
+        {
+          "rep": 1,
+          "loadMs": 15.273500001057982,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 51
+        },
+        {
+          "rep": 2,
+          "loadMs": 14.71100002527237,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 51
+        },
+        {
+          "rep": 3,
+          "loadMs": 9.134600055404007,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 51
+        },
+        {
+          "rep": 4,
+          "loadMs": 11.412700056098402,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 51
+        }
+      ]
+    },
+    {
+      "objects": 20,
+      "rttMs": 0.0,
+      "rttMode": "loopback",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 62.382500036619604,
+        "p25": 57.21839994657785,
+        "p75": 64.22599998768419,
+        "min": 54.390499950386584,
+        "max": 64.43669996224344
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 57.21839994657785,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 229
+        },
+        {
+          "rep": 1,
+          "loadMs": 62.382500036619604,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 227
+        },
+        {
+          "rep": 2,
+          "loadMs": 54.390499950386584,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 230
+        },
+        {
+          "rep": 3,
+          "loadMs": 64.43669996224344,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 230
+        },
+        {
+          "rep": 4,
+          "loadMs": 64.22599998768419,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 232
+        }
+      ]
+    },
+    {
+      "objects": 20,
+      "rttMs": 0.0,
+      "rttMode": "loopback",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 14.544899924658239,
+        "p25": 10.477300034835935,
+        "p75": 15.144000062718987,
+        "min": 6.78300007712096,
+        "max": 28.060699929483235
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 14.544899924658239,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 95
+        },
+        {
+          "rep": 1,
+          "loadMs": 10.477300034835935,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 95
+        },
+        {
+          "rep": 2,
+          "loadMs": 28.060699929483235,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 95
+        },
+        {
+          "rep": 3,
+          "loadMs": 6.78300007712096,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 95
+        },
+        {
+          "rep": 4,
+          "loadMs": 15.144000062718987,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 95
+        }
+      ]
+    },
+    {
+      "objects": 40,
+      "rttMs": 0.0,
+      "rttMode": "loopback",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 93.27890002168715,
+        "p25": 92.79579995200038,
+        "p75": 95.14769993256778,
+        "min": 87.92920003179461,
+        "max": 121.28620001021773
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 95.14769993256778,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 460
+        },
+        {
+          "rep": 1,
+          "loadMs": 93.27890002168715,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 458
+        },
+        {
+          "rep": 2,
+          "loadMs": 87.92920003179461,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 459
+        },
+        {
+          "rep": 3,
+          "loadMs": 92.79579995200038,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 458
+        },
+        {
+          "rep": 4,
+          "loadMs": 121.28620001021773,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 456
+        }
+      ]
+    },
+    {
+      "objects": 40,
+      "rttMs": 0.0,
+      "rttMode": "loopback",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 18.839200027287006,
+        "p25": 16.366299940273166,
+        "p75": 31.532200053334236,
+        "min": 15.597700024954975,
+        "max": 35.80190008506179
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 15.597700024954975,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 183
+        },
+        {
+          "rep": 1,
+          "loadMs": 31.532200053334236,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 183
+        },
+        {
+          "rep": 2,
+          "loadMs": 16.366299940273166,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 183
+        },
+        {
+          "rep": 3,
+          "loadMs": 35.80190008506179,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 184
+        },
+        {
+          "rep": 4,
+          "loadMs": 18.839200027287006,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 183
+        }
+      ]
+    },
+    {
+      "objects": 1,
+      "rttMs": 10.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 27.86009991541505,
+        "p25": 26.670900057069957,
+        "p75": 27.889799908734858,
+        "min": 25.912599987350404,
+        "max": 28.719799942336977
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 27.86009991541505,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 12
+        },
+        {
+          "rep": 1,
+          "loadMs": 26.670900057069957,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 2,
+          "loadMs": 28.719799942336977,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 3,
+          "loadMs": 25.912599987350404,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 12
+        },
+        {
+          "rep": 4,
+          "loadMs": 27.889799908734858,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        }
+      ]
+    },
+    {
+      "objects": 1,
+      "rttMs": 10.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 27.973399963229895,
+        "p25": 27.224000077694654,
+        "p75": 28.382400050759315,
+        "min": 26.9683999940753,
+        "max": 29.66289990581572
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 27.973399963229895,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 1,
+          "loadMs": 27.224000077694654,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 2,
+          "loadMs": 28.382400050759315,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 3,
+          "loadMs": 26.9683999940753,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 4,
+          "loadMs": 29.66289990581572,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        }
+      ]
+    },
+    {
+      "objects": 5,
+      "rttMs": 10.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 141.22340001631528,
+        "p25": 140.5414999462664,
+        "p75": 143.23899999726564,
+        "min": 137.38169998396188,
+        "max": 144.16940009687096
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 144.16940009687096,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 58
+        },
+        {
+          "rep": 1,
+          "loadMs": 141.22340001631528,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 59
+        },
+        {
+          "rep": 2,
+          "loadMs": 143.23899999726564,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 59
+        },
+        {
+          "rep": 3,
+          "loadMs": 140.5414999462664,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 60
+        },
+        {
+          "rep": 4,
+          "loadMs": 137.38169998396188,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 59
+        }
+      ]
+    },
+    {
+      "objects": 5,
+      "rttMs": 10.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 82.8086999244988,
+        "p25": 81.6636000527069,
+        "p75": 84.05549998860806,
+        "min": 81.30200009327382,
+        "max": 84.626599913463
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 84.626599913463,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 31
+        },
+        {
+          "rep": 1,
+          "loadMs": 81.6636000527069,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 31
+        },
+        {
+          "rep": 2,
+          "loadMs": 81.30200009327382,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 31
+        },
+        {
+          "rep": 3,
+          "loadMs": 84.05549998860806,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 31
+        },
+        {
+          "rep": 4,
+          "loadMs": 82.8086999244988,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 31
+        }
+      ]
+    },
+    {
+      "objects": 10,
+      "rttMs": 10.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 285.28129996266216,
+        "p25": 283.4232000168413,
+        "p75": 295.1007999945432,
+        "min": 281.67110006324947,
+        "max": 298.4981000190601
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 285.28129996266216,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 118
+        },
+        {
+          "rep": 1,
+          "loadMs": 281.67110006324947,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 120
+        },
+        {
+          "rep": 2,
+          "loadMs": 295.1007999945432,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 119
+        },
+        {
+          "rep": 3,
+          "loadMs": 283.4232000168413,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 120
+        },
+        {
+          "rep": 4,
+          "loadMs": 298.4981000190601,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 119
+        }
+      ]
+    },
+    {
+      "objects": 10,
+      "rttMs": 10.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 156.70599997974932,
+        "p25": 151.7332000657916,
+        "p75": 158.00460008904338,
+        "min": 149.4125999743119,
+        "max": 166.27970000263304
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 151.7332000657916,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        },
+        {
+          "rep": 1,
+          "loadMs": 149.4125999743119,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        },
+        {
+          "rep": 2,
+          "loadMs": 156.70599997974932,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        },
+        {
+          "rep": 3,
+          "loadMs": 158.00460008904338,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        },
+        {
+          "rep": 4,
+          "loadMs": 166.27970000263304,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        }
+      ]
+    },
+    {
+      "objects": 20,
+      "rttMs": 10.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 559.1351999901235,
+        "p25": 553.6835000384599,
+        "p75": 577.5771000189707,
+        "min": 548.707399982959,
+        "max": 616.916099912487
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 559.1351999901235,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 240
+        },
+        {
+          "rep": 1,
+          "loadMs": 616.916099912487,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 239
+        },
+        {
+          "rep": 2,
+          "loadMs": 577.5771000189707,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 237
+        },
+        {
+          "rep": 3,
+          "loadMs": 548.707399982959,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 233
+        },
+        {
+          "rep": 4,
+          "loadMs": 553.6835000384599,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 242
+        }
+      ]
+    },
+    {
+      "objects": 20,
+      "rttMs": 10.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 303.3200000645593,
+        "p25": 296.31650005467236,
+        "p75": 304.9519999185577,
+        "min": 289.4971000496298,
+        "max": 324.56570002250373
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 296.31650005467236,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 107
+        },
+        {
+          "rep": 1,
+          "loadMs": 304.9519999185577,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 107
+        },
+        {
+          "rep": 2,
+          "loadMs": 324.56570002250373,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 107
+        },
+        {
+          "rep": 3,
+          "loadMs": 303.3200000645593,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 107
+        },
+        {
+          "rep": 4,
+          "loadMs": 289.4971000496298,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 107
+        }
+      ]
+    },
+    {
+      "objects": 40,
+      "rttMs": 10.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 1128.4411000087857,
+        "p25": 1124.1339999251068,
+        "p75": 1131.6235000267625,
+        "min": 1115.5646999832243,
+        "max": 1136.5215999539942
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 1131.6235000267625,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 479
+        },
+        {
+          "rep": 1,
+          "loadMs": 1115.5646999832243,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 481
+        },
+        {
+          "rep": 2,
+          "loadMs": 1128.4411000087857,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 477
+        },
+        {
+          "rep": 3,
+          "loadMs": 1124.1339999251068,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 483
+        },
+        {
+          "rep": 4,
+          "loadMs": 1136.5215999539942,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 475
+        }
+      ]
+    },
+    {
+      "objects": 40,
+      "rttMs": 10.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 578.2631000038236,
+        "p25": 574.1329999873415,
+        "p75": 584.7512000473216,
+        "min": 574.0122999995947,
+        "max": 621.3887999765575
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 574.1329999873415,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 207
+        },
+        {
+          "rep": 1,
+          "loadMs": 621.3887999765575,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 205
+        },
+        {
+          "rep": 2,
+          "loadMs": 578.2631000038236,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 207
+        },
+        {
+          "rep": 3,
+          "loadMs": 584.7512000473216,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 207
+        },
+        {
+          "rep": 4,
+          "loadMs": 574.0122999995947,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 207
+        }
+      ]
+    },
+    {
+      "objects": 1,
+      "rttMs": 50.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 109.11670001223683,
+        "p25": 108.45099994912744,
+        "p75": 110.90009997133166,
+        "min": 107.99469996709377,
+        "max": 111.39440000988543
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 109.11670001223683,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 1,
+          "loadMs": 108.45099994912744,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 2,
+          "loadMs": 110.90009997133166,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 3,
+          "loadMs": 107.99469996709377,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 4,
+          "loadMs": 111.39440000988543,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        }
+      ]
+    },
+    {
+      "objects": 1,
+      "rttMs": 50.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 106.82820004876703,
+        "p25": 106.09209991525859,
+        "p75": 107.88949998095632,
+        "min": 104.38140004407614,
+        "max": 108.56730001978576
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 107.88949998095632,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 1,
+          "loadMs": 108.56730001978576,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 2,
+          "loadMs": 106.82820004876703,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 3,
+          "loadMs": 104.38140004407614,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 4,
+          "loadMs": 106.09209991525859,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        }
+      ]
+    },
+    {
+      "objects": 5,
+      "rttMs": 50.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 543.7189000658691,
+        "p25": 538.4584000566974,
+        "p75": 547.4758000345901,
+        "min": 538.3597000036389,
+        "max": 547.8023999603465
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 538.3597000036389,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 59
+        },
+        {
+          "rep": 1,
+          "loadMs": 547.4758000345901,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 59
+        },
+        {
+          "rep": 2,
+          "loadMs": 547.8023999603465,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 55
+        },
+        {
+          "rep": 3,
+          "loadMs": 538.4584000566974,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 60
+        },
+        {
+          "rep": 4,
+          "loadMs": 543.7189000658691,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 59
+        }
+      ]
+    },
+    {
+      "objects": 5,
+      "rttMs": 50.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 324.7115999693051,
+        "p25": 324.0968999452889,
+        "p75": 327.98399997409433,
+        "min": 321.9574000686407,
+        "max": 328.0304999789223
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 324.7115999693051,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 31
+        },
+        {
+          "rep": 1,
+          "loadMs": 321.9574000686407,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 31
+        },
+        {
+          "rep": 2,
+          "loadMs": 327.98399997409433,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 31
+        },
+        {
+          "rep": 3,
+          "loadMs": 324.0968999452889,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 31
+        },
+        {
+          "rep": 4,
+          "loadMs": 328.0304999789223,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 31
+        }
+      ]
+    },
+    {
+      "objects": 10,
+      "rttMs": 50.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 1083.8995999656618,
+        "p25": 1080.5927000474185,
+        "p75": 1086.5250999340788,
+        "min": 1075.8919999934733,
+        "max": 1090.8288999926299
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 1083.8995999656618,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 117
+        },
+        {
+          "rep": 1,
+          "loadMs": 1080.5927000474185,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 119
+        },
+        {
+          "rep": 2,
+          "loadMs": 1075.8919999934733,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 119
+        },
+        {
+          "rep": 3,
+          "loadMs": 1086.5250999340788,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 115
+        },
+        {
+          "rep": 4,
+          "loadMs": 1090.8288999926299,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 117
+        }
+      ]
+    },
+    {
+      "objects": 10,
+      "rttMs": 50.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 593.3515999931842,
+        "p25": 590.8976000500843,
+        "p75": 594.7317999089137,
+        "min": 590.8713000826538,
+        "max": 595.5837999936193
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 593.3515999931842,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        },
+        {
+          "rep": 1,
+          "loadMs": 594.7317999089137,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        },
+        {
+          "rep": 2,
+          "loadMs": 595.5837999936193,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        },
+        {
+          "rep": 3,
+          "loadMs": 590.8976000500843,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        },
+        {
+          "rep": 4,
+          "loadMs": 590.8713000826538,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        }
+      ]
+    },
+    {
+      "objects": 20,
+      "rttMs": 50.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 2169.4991999538615,
+        "p25": 2166.916299960576,
+        "p75": 2172.8219999931753,
+        "min": 2154.2300999863073,
+        "max": 2173.0013999622315
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 2173.0013999622315,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 239
+        },
+        {
+          "rep": 1,
+          "loadMs": 2154.2300999863073,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 240
+        },
+        {
+          "rep": 2,
+          "loadMs": 2172.8219999931753,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 240
+        },
+        {
+          "rep": 3,
+          "loadMs": 2166.916299960576,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 241
+        },
+        {
+          "rep": 4,
+          "loadMs": 2169.4991999538615,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 237
+        }
+      ]
+    },
+    {
+      "objects": 20,
+      "rttMs": 50.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 1134.3189000617713,
+        "p25": 1132.9162999754772,
+        "p75": 1142.7729999413714,
+        "min": 1132.4490000260994,
+        "max": 1145.2558999881148
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 1134.3189000617713,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 107
+        },
+        {
+          "rep": 1,
+          "loadMs": 1145.2558999881148,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 107
+        },
+        {
+          "rep": 2,
+          "loadMs": 1132.9162999754772,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 107
+        },
+        {
+          "rep": 3,
+          "loadMs": 1142.7729999413714,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 107
+        },
+        {
+          "rep": 4,
+          "loadMs": 1132.4490000260994,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 107
+        }
+      ]
+    },
+    {
+      "objects": 40,
+      "rttMs": 50.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 4341.879500076175,
+        "p25": 4333.2767999963835,
+        "p75": 4342.211200040765,
+        "min": 4329.400699934922,
+        "max": 4345.370099996217
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 4329.400699934922,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 482
+        },
+        {
+          "rep": 1,
+          "loadMs": 4341.879500076175,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 477
+        },
+        {
+          "rep": 2,
+          "loadMs": 4345.370099996217,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 478
+        },
+        {
+          "rep": 3,
+          "loadMs": 4342.211200040765,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 482
+        },
+        {
+          "rep": 4,
+          "loadMs": 4333.2767999963835,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 477
+        }
+      ]
+    },
+    {
+      "objects": 40,
+      "rttMs": 50.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 2240.106699988246,
+        "p25": 2216.0371999489143,
+        "p75": 2242.923300014809,
+        "min": 2213.5915000690147,
+        "max": 2248.80599998869
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 2242.923300014809,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 205
+        },
+        {
+          "rep": 1,
+          "loadMs": 2240.106699988246,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 207
+        },
+        {
+          "rep": 2,
+          "loadMs": 2216.0371999489143,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 207
+        },
+        {
+          "rep": 3,
+          "loadMs": 2213.5915000690147,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 199
+        },
+        {
+          "rep": 4,
+          "loadMs": 2248.80599998869,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 205
+        }
+      ]
+    },
+    {
+      "objects": 1,
+      "rttMs": 100.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 209.96459992602468,
+        "p25": 208.84710003156215,
+        "p75": 210.4481999995187,
+        "min": 207.76710007339716,
+        "max": 211.74430008977652
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 210.4481999995187,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 10
+        },
+        {
+          "rep": 1,
+          "loadMs": 208.84710003156215,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 2,
+          "loadMs": 211.74430008977652,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 3,
+          "loadMs": 209.96459992602468,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 4,
+          "loadMs": 207.76710007339716,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        }
+      ]
+    },
+    {
+      "objects": 1,
+      "rttMs": 100.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 208.9077999116853,
+        "p25": 207.660699961707,
+        "p75": 211.30670001730323,
+        "min": 207.27320003788918,
+        "max": 212.73909998126328
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 211.30670001730323,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 1,
+          "loadMs": 207.27320003788918,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 2,
+          "loadMs": 212.73909998126328,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 3,
+          "loadMs": 208.9077999116853,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        },
+        {
+          "rep": 4,
+          "loadMs": 207.660699961707,
+          "clientConnections": 1,
+          "requests": 1,
+          "serverConnections": 1,
+          "serverRequests": 1,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 11
+        }
+      ]
+    },
+    {
+      "objects": 5,
+      "rttMs": 100.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 1048.8978000357747,
+        "p25": 1042.7673000376672,
+        "p75": 1048.9505999721587,
+        "min": 1042.4234000965953,
+        "max": 1049.471199978143
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 1048.9505999721587,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 58
+        },
+        {
+          "rep": 1,
+          "loadMs": 1049.471199978143,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 59
+        },
+        {
+          "rep": 2,
+          "loadMs": 1042.4234000965953,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 55
+        },
+        {
+          "rep": 3,
+          "loadMs": 1048.8978000357747,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 59
+        },
+        {
+          "rep": 4,
+          "loadMs": 1042.7673000376672,
+          "clientConnections": 5,
+          "requests": 5,
+          "serverConnections": 5,
+          "serverRequests": 5,
+          "captureConnections": 5,
+          "captureHandshakes": 5,
+          "captureSegments": 54
+        }
+      ]
+    },
+    {
+      "objects": 5,
+      "rttMs": 100.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 630.8319000527263,
+        "p25": 630.1970999920741,
+        "p75": 645.4613999230787,
+        "min": 626.7025000415742,
+        "max": 654.5163999544457
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 645.4613999230787,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 29
+        },
+        {
+          "rep": 1,
+          "loadMs": 654.5163999544457,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 29
+        },
+        {
+          "rep": 2,
+          "loadMs": 630.8319000527263,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 31
+        },
+        {
+          "rep": 3,
+          "loadMs": 626.7025000415742,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 31
+        },
+        {
+          "rep": 4,
+          "loadMs": 630.1970999920741,
+          "clientConnections": 1,
+          "requests": 5,
+          "serverConnections": 1,
+          "serverRequests": 5,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 29
+        }
+      ]
+    },
+    {
+      "objects": 10,
+      "rttMs": 100.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 2090.8721999730915,
+        "p25": 2090.563299949281,
+        "p75": 2093.6863999813795,
+        "min": 2090.008500032127,
+        "max": 2096.520100021735
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 2093.6863999813795,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 113
+        },
+        {
+          "rep": 1,
+          "loadMs": 2090.8721999730915,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 117
+        },
+        {
+          "rep": 2,
+          "loadMs": 2090.008500032127,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 119
+        },
+        {
+          "rep": 3,
+          "loadMs": 2096.520100021735,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 117
+        },
+        {
+          "rep": 4,
+          "loadMs": 2090.563299949281,
+          "clientConnections": 10,
+          "requests": 10,
+          "serverConnections": 10,
+          "serverRequests": 10,
+          "captureConnections": 10,
+          "captureHandshakes": 10,
+          "captureSegments": 113
+        }
+      ]
+    },
+    {
+      "objects": 10,
+      "rttMs": 100.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 1147.590299951844,
+        "p25": 1146.9740000320598,
+        "p75": 1148.1095000635833,
+        "min": 1146.8607999850065,
+        "max": 1149.353300104849
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 1147.590299951844,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        },
+        {
+          "rep": 1,
+          "loadMs": 1146.9740000320598,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        },
+        {
+          "rep": 2,
+          "loadMs": 1146.8607999850065,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        },
+        {
+          "rep": 3,
+          "loadMs": 1148.1095000635833,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        },
+        {
+          "rep": 4,
+          "loadMs": 1149.353300104849,
+          "clientConnections": 1,
+          "requests": 10,
+          "serverConnections": 1,
+          "serverRequests": 10,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 55
+        }
+      ]
+    },
+    {
+      "objects": 20,
+      "rttMs": 100.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 4188.828899990767,
+        "p25": 4184.95410005562,
+        "p75": 4191.333999973722,
+        "min": 4182.634299970232,
+        "max": 4194.8638000758365
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 4184.95410005562,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 238
+        },
+        {
+          "rep": 1,
+          "loadMs": 4191.333999973722,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 242
+        },
+        {
+          "rep": 2,
+          "loadMs": 4188.828899990767,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 237
+        },
+        {
+          "rep": 3,
+          "loadMs": 4182.634299970232,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 242
+        },
+        {
+          "rep": 4,
+          "loadMs": 4194.8638000758365,
+          "clientConnections": 20,
+          "requests": 20,
+          "serverConnections": 20,
+          "serverRequests": 20,
+          "captureConnections": 20,
+          "captureHandshakes": 20,
+          "captureSegments": 237
+        }
+      ]
+    },
+    {
+      "objects": 20,
+      "rttMs": 100.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 2200.6017999956384,
+        "p25": 2191.1101000150666,
+        "p75": 2203.933999990113,
+        "min": 2190.1125999866053,
+        "max": 2204.108100035228
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 2204.108100035228,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 103
+        },
+        {
+          "rep": 1,
+          "loadMs": 2200.6017999956384,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 105
+        },
+        {
+          "rep": 2,
+          "loadMs": 2190.1125999866053,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 107
+        },
+        {
+          "rep": 3,
+          "loadMs": 2203.933999990113,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 107
+        },
+        {
+          "rep": 4,
+          "loadMs": 2191.1101000150666,
+          "clientConnections": 1,
+          "requests": 20,
+          "serverConnections": 1,
+          "serverRequests": 20,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 107
+        }
+      ]
+    },
+    {
+      "objects": 40,
+      "rttMs": 100.0,
+      "rttMode": "emulated",
+      "strategy": "close",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 8358.960500103422,
+        "p25": 8357.700599939562,
+        "p75": 8367.823799955659,
+        "min": 8357.141999993473,
+        "max": 8377.84480000846
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 8357.700599939562,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 481
+        },
+        {
+          "rep": 1,
+          "loadMs": 8357.141999993473,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 473
+        },
+        {
+          "rep": 2,
+          "loadMs": 8358.960500103422,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 480
+        },
+        {
+          "rep": 3,
+          "loadMs": 8377.84480000846,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 479
+        },
+        {
+          "rep": 4,
+          "loadMs": 8367.823799955659,
+          "clientConnections": 40,
+          "requests": 40,
+          "serverConnections": 40,
+          "serverRequests": 40,
+          "captureConnections": 40,
+          "captureHandshakes": 40,
+          "captureSegments": 482
+        }
+      ]
+    },
+    {
+      "objects": 40,
+      "rttMs": 100.0,
+      "rttMode": "emulated",
+      "strategy": "keepalive",
+      "repetitions": 5,
+      "loadMs": {
+        "median": 4293.957700021565,
+        "p25": 4278.411100036465,
+        "p75": 4296.2184000061825,
+        "min": 4273.740400094539,
+        "max": 4326.257799984887
+      },
+      "samples": [
+        {
+          "rep": 0,
+          "loadMs": 4326.257799984887,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 201
+        },
+        {
+          "rep": 1,
+          "loadMs": 4296.2184000061825,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 205
+        },
+        {
+          "rep": 2,
+          "loadMs": 4273.740400094539,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 207
+        },
+        {
+          "rep": 3,
+          "loadMs": 4293.957700021565,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 207
+        },
+        {
+          "rep": 4,
+          "loadMs": 4278.411100036465,
+          "clientConnections": 1,
+          "requests": 40,
+          "serverConnections": 1,
+          "serverRequests": 40,
+          "captureConnections": 1,
+          "captureHandshakes": 1,
+          "captureSegments": 205
+        }
+      ]
+    }
+  ]
+}

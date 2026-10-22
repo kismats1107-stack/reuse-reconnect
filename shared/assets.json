@@ -1,0 +1,165 @@
+{
+  "$comment": "Files of the example web page, fetched by both the browser model and the Python lab. Object i of a run is entry i-1; both strategies fetch the same list.",
+  "assets": [
+    {
+      "path": "/index.html",
+      "bytes": 18432
+    },
+    {
+      "path": "/app.js",
+      "bytes": 43008
+    },
+    {
+      "path": "/logo.svg",
+      "bytes": 9216
+    },
+    {
+      "path": "/hero.jpg",
+      "bytes": 65536
+    },
+    {
+      "path": "/font-regular.woff2",
+      "bytes": 26624
+    },
+    {
+      "path": "/avatar.png",
+      "bytes": 122880
+    },
+    {
+      "path": "/data.json",
+      "bytes": 12288
+    },
+    {
+      "path": "/gallery-1.webp",
+      "bytes": 36864
+    },
+    {
+      "path": "/theme.css",
+      "bytes": 18432
+    },
+    {
+      "path": "/menu.js",
+      "bytes": 43008
+    },
+    {
+      "path": "/icons.svg",
+      "bytes": 9216
+    },
+    {
+      "path": "/banner.jpg",
+      "bytes": 65536
+    },
+    {
+      "path": "/font-bold.woff2",
+      "bytes": 26624
+    },
+    {
+      "path": "/screenshot.png",
+      "bytes": 122880
+    },
+    {
+      "path": "/config.json",
+      "bytes": 12288
+    },
+    {
+      "path": "/gallery-2.webp",
+      "bytes": 36864
+    },
+    {
+      "path": "/layout.css",
+      "bytes": 18432
+    },
+    {
+      "path": "/chart.js",
+      "bytes": 43008
+    },
+    {
+      "path": "/arrow.svg",
+      "bytes": 9216
+    },
+    {
+      "path": "/photo-1.jpg",
+      "bytes": 65536
+    },
+    {
+      "path": "/font-italic.woff2",
+      "bytes": 26624
+    },
+    {
+      "path": "/thumb-1.png",
+      "bytes": 122880
+    },
+    {
+      "path": "/menu-items.json",
+      "bytes": 12288
+    },
+    {
+      "path": "/gallery-3.webp",
+      "bytes": 36864
+    },
+    {
+      "path": "/print.css",
+      "bytes": 18432
+    },
+    {
+      "path": "/slider.js",
+      "bytes": 43008
+    },
+    {
+      "path": "/badge.svg",
+      "bytes": 9216
+    },
+    {
+      "path": "/photo-2.jpg",
+      "bytes": 65536
+    },
+    {
+      "path": "/font-mono.woff2",
+      "bytes": 26624
+    },
+    {
+      "path": "/thumb-2.png",
+      "bytes": 122880
+    },
+    {
+      "path": "/prices.json",
+      "bytes": 12288
+    },
+    {
+      "path": "/gallery-4.webp",
+      "bytes": 36864
+    },
+    {
+      "path": "/grid.css",
+      "bytes": 18432
+    },
+    {
+      "path": "/search.js",
+      "bytes": 43008
+    },
+    {
+      "path": "/map.svg",
+      "bytes": 9216
+    },
+    {
+      "path": "/poster.jpg",
+      "bytes": 65536
+    },
+    {
+      "path": "/font-light.woff2",
+      "bytes": 26624
+    },
+    {
+      "path": "/sprite.png",
+      "bytes": 122880
+    },
+    {
+      "path": "/translations.json",
+      "bytes": 12288
+    },
+    {
+      "path": "/gallery-5.webp",
+      "bytes": 36864
+    }
+  ]
+}

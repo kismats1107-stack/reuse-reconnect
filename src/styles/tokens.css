@@ -1,0 +1,55 @@
+/* Design tokens: one deep-ink base, two scarce accents, one "cost" colour. */
+@theme {
+  --color-ink: #080b12;
+  --color-surface: #101722;
+  --color-raised: #151f2d;
+  --color-line: rgb(155 169 187 / 0.16);
+  --color-line-strong: rgb(155 169 187 / 0.32);
+  --color-text: #f3f6fa;
+  --color-muted: #9ba9bb;
+  --color-faint: #8090a3;
+  --color-cyan: #54d9f5;
+  --color-lime: #c7f36b;
+  --color-cost: #ff9466;
+
+  /* Chart fills: deeper steps of the accents, validated for the dark surface
+     (lightness band, CVD separation, 3:1 contrast). Text never uses them. */
+  --color-chart-cost: #e46a34;
+  --color-chart-cyan: #1c9dbd;
+  --color-chart-lime: #76a120;
+  --color-chart-neutral: #4a5768;
+
+  --font-display: "Space Grotesk Variable", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  --cut: 14px;
+  --cut-sm: 8px;
+  color-scheme: dark;
+}
+
+/* Light theme: same token names, so every component follows. Text accents are
+   darkened to keep 4.5:1 contrast on the light surfaces; chart fills are a
+   separately validated set for a white surface. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-ink: #f4f6f9;
+  --color-surface: #ffffff;
+  --color-raised: #eef2f7;
+  --color-line: rgb(15 23 42 / 0.12);
+  --color-line-strong: rgb(15 23 42 / 0.26);
+  --color-text: #0b1220;
+  --color-muted: #4a5a70;
+  --color-faint: #566579;
+  --color-cyan: #0e7490;
+  --color-lime: #3f6b0c;
+  --color-cost: #b23b0b;
+  --color-chart-cost: #d4602b;
+  --color-chart-cyan: #0e8fb0;
+  --color-chart-lime: #5a8f12;
+  --color-chart-neutral: #94a3b8;
+}
