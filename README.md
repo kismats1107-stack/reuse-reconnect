@@ -36,7 +36,7 @@ npm run build
 npx netlify-cli deploy --prod --dir dist --no-build --site reuse-reconnect
 ```
 
-The pages use hash routes (`#/lab`, `#/results`), so no redirect rules are needed. `.github/workflows/deploy.yml` can also publish to GitHub Pages if the repository is pushed to GitHub.
+The pages use hash routes (`#/lab`, `#/results`), so no redirect rules are needed. Code: https://github.com/kismats1107-stack/reuse-reconnect. GitHub Actions (`.github/workflows/ci.yml`) runs lint, tests and a build on every push.
 
 ## Real measurements (Python + Wireshark)
 
