@@ -1,5 +1,7 @@
 # Reuse / Reconnect
 
+**Live:** https://reuse-reconnect.netlify.app
+
 **HTTP Keep-Alive vs New-Connection Requests**: an interactive 3D Computer Networks lab for students.
 
 > How does connection reuse affect the total number of requests, TCP connections and handshakes, and the time a page needs to load?
@@ -24,6 +26,17 @@ npm test             # Vitest: model, narration, challenges
 npm run lint
 npm run build        # static site in dist/ (npm run preview to check it)
 ```
+
+## Deploy
+
+The site is hosted on Netlify (`netlify.toml` holds the build settings). To publish a new version:
+
+```bash
+npm run build
+npx netlify-cli deploy --prod --dir dist --no-build --site reuse-reconnect
+```
+
+The pages use hash routes (`#/lab`, `#/results`), so no redirect rules are needed. `.github/workflows/deploy.yml` can also publish to GitHub Pages if the repository is pushed to GitHub.
 
 ## Real measurements (Python + Wireshark)
 
