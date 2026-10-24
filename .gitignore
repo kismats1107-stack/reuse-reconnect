@@ -5,3 +5,4 @@ __pycache__/
 lab/out/
 .pytest_cache/
 .netlify/
+tools/video/.chrome-profile/
