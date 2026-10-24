@@ -5,6 +5,7 @@
 //   node tools/video/record.mjs --url http://localhost:5180/
 //   node tools/video/record.mjs --dry-run    no OBS, no Enter: just run every demo once
 //   node tools/video/record.mjs --obs-check  connect to OBS, create the scenes, report, exit
+//   node tools/video/record.mjs --no-cam     record without the face-cam corner
 //
 // It opens a full-screen Chrome window on the site and does the clicking for
 // each segment of script.mjs, while this terminal shows the lines to read.
@@ -68,21 +69,17 @@ class Obs {
     const cfgPath = join(process.env.APPDATA, "obs-studio", "plugin_config", "obs-websocket", "config.json");
     const cfg = JSON.parse(readFileSync(cfgPath, "utf8"));
     if (!cfg.server_enabled) throw new Error("OBS WebSocket server is off (OBS → Tools → WebSocket Server Settings → Enable)");
-    for (let i = 0; i < 40; i++) {
+    // Connect to the OBS you opened; never start a second copy (two copies fight over the webcam).
+    for (let i = 0; i < 10; i++) {
       try {
         await this.open(`ws://127.0.0.1:${cfg.server_port}`, cfg.auth_required ? cfg.server_password : null);
         return;
       } catch {
-        if (i === 0) this.launch();
-        await sleep(1000);
+        if (i === 0) console.log(`${C.yel}Waiting for OBS… open OBS Studio if it is not running.${C.r}`);
+        await sleep(1500);
       }
     }
-    throw new Error("could not reach OBS; is it running?");
-  }
-  launch() {
-    const bin = "C:/Program Files/obs-studio/bin/64bit";
-    console.log(`${C.dim}starting OBS…${C.r}`);
-    spawn(join(bin, "obs64.exe"), ["--disable-shutdown-check"], { cwd: bin, detached: true, stdio: "ignore" }).unref();
+    throw new Error("could not reach OBS. Open OBS Studio once (not twice), then run this again.");
   }
   open(url, password) {
     return new Promise((res, rej) => {
@@ -135,10 +132,35 @@ class Obs {
       sceneItemTransform: { positionX: 0, positionY: 0, alignment: 5, boundsType: "OBS_BOUNDS_SCALE_INNER", boundsAlignment: 0, boundsWidth: v.baseWidth, boundsHeight: v.baseHeight },
     });
   }
+  /**
+   * Puts the existing webcam source (OBS "Video Capture Device") in the bottom-right
+   * corner of a scene. 232 × 130 at the edge of a 1920 × 1080 canvas stays clear
+   * of the lab's control bar, which ends 240 px from the right.
+   */
+  async addCam(sceneName) {
+    const { inputs } = await this.call("GetInputList", { inputKind: "dshow_input" });
+    const cam = inputs[0]?.inputName;
+    if (!cam) return null;
+    const { sceneItems } = await this.call("GetSceneItemList", { sceneName });
+    let item = sceneItems.find((i) => i.sourceName === cam)?.sceneItemId;
+    if (!item) item = (await this.call("CreateSceneItem", { sceneName, sourceName: cam })).sceneItemId;
+    const v = await this.call("GetVideoSettings");
+    const w = Math.round(v.baseWidth * 0.121), hgt = Math.round((w * 9) / 16), m = Math.round(v.baseWidth * 0.006);
+    await this.call("SetSceneItemTransform", {
+      sceneName,
+      sceneItemId: item,
+      sceneItemTransform: { positionX: v.baseWidth - m, positionY: v.baseHeight - m, alignment: 10, boundsType: "OBS_BOUNDS_SCALE_OUTER", boundsAlignment: 0, boundsWidth: w, boundsHeight: hgt, cropLeft: 0, cropRight: 0 },
+    });
+    await this.call("SetSceneItemIndex", { sceneName, sceneItemId: item, sceneItemIndex: sceneItems.length }); // on top
+    await this.call("SetSceneItemEnabled", { sceneName, sceneItemId: item, sceneItemEnabled: !flag("--no-cam") });
+    return cam;
+  }
   async setup() {
     // window "title:class:exe"; priority 1 = title must match, 2 = title, else same exe; method 2 = Windows Graphics Capture
     await this.ensureWindowScene(SCENE_WEB, "RR Chrome window", { window: `${TITLE}:Chrome_WidgetWin_1:chrome.exe`, priority: 1, method: 2, cursor: false, client_area: true });
     await this.ensureWindowScene(SCENE_WS, "RR Wireshark window", { window: "Wireshark:Qt5152QWindowIcon:Wireshark.exe", priority: 2, method: 2, cursor: false, client_area: true });
+    const cam = (await this.addCam(SCENE_WEB)) && (await this.addCam(SCENE_WS));
+    console.log(cam ? `${C.dim}face-cam: ${flag("--no-cam") ? "off (--no-cam)" : "bottom-right corner"}${C.r}` : `${C.red}No webcam source found in OBS; recording without face-cam.${C.r}`);
     await this.call("SetCurrentProgramScene", { sceneName: SCENE_WEB });
     const special = await this.call("GetSpecialInputs");
     if (!special.mic1) console.log(`${C.red}No microphone in OBS (Settings → Audio → Mic/Auxiliary Audio). Set it before recording.${C.r}`);
