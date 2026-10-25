@@ -577,7 +577,11 @@ function startPrompterServer() {
       if (cmd === "next") prompter.cmd.next = true;
       // voice-follow: the teleprompter reports how much of the segment has been said
       if (cmd === "voice") prompter.cmd.voice = url.searchParams.get("on") === "1";
-      if (cmd === "progress") prompter.cmd.frac = Number(url.searchParams.get("frac")) || 0;
+      if (cmd === "progress") {
+        const f = Number(url.searchParams.get("frac")) || 0;
+        if (f > prompter.cmd.frac) prompter.cmd.progressAt = Date.now();
+        prompter.cmd.frac = f;
+      }
       res.end("ok");
     } else {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
@@ -677,6 +681,7 @@ async function main() {
       prompter.cmd.hold = false;
       prompter.cmd.next = false;
       prompter.cmd.frac = 0;
+      prompter.cmd.progressAt = Date.now();
       let demoDone = false;
       demo
         .run(h, page)
@@ -692,7 +697,10 @@ async function main() {
         const now = Date.now();
         if (!prompter.cmd.hold) elapsed += now - last;
         last = now;
-        const readDone = prompter.cmd.voice ? prompter.cmd.frac >= 0.9 : elapsed >= plan.speechMs * 1.3;
+        // voice: done when 90% has been said, or (if voice-follow got stuck) after 1.5x the expected
+        // reading time with nothing new recognised for 8 s; no voice: a slow timer
+        const stuck = elapsed >= plan.speechMs * 1.5 && now - (prompter.cmd.progressAt ?? 0) > 8000;
+        const readDone = prompter.cmd.voice ? prompter.cmd.frac >= 0.9 || stuck : elapsed >= plan.speechMs * 1.3;
         publish({ elapsed, hold: prompter.cmd.hold, demoDone, readDone, speechMs: Math.round(plan.speechMs * (prompter.cmd.voice ? 1 : 1.3)) });
         if (demoDone && (prompter.cmd.next || (readDone && !prompter.cmd.hold))) break;
       }
