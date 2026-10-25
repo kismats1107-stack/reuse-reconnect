@@ -12,17 +12,20 @@
   .dot.rec { background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: pulse 1.2s infinite; }
   @keyframes pulse { 50% { opacity: .45; } }
   .seg { font-weight: 700; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mode { font: 600 11px Consolas, monospace; padding: 2px 6px; border-radius: 4px; border: 1px solid #374151; color: #9ca3af; white-space: nowrap; }
+  .mode.voice { color: #a3e635; border-color: #a3e635; }
   .state { margin-left: auto; font: 600 13px Consolas, monospace; color: #a3e635; white-space: nowrap; }
   .bar { height: 5px; background: #1f2937; }
   .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #22d3ee, #a3e635); transition: width .25s linear; }
   /* the text area takes the space between header and buttons and scrolls inside it */
   #view { flex: 1; min-height: 0; overflow: hidden; }
-  main { height: 100%; overflow-y: auto; padding: 14px 22px 40vh; scroll-behavior: smooth; }
-  main p { font-size: 25px; line-height: 1.45; margin: 0 0 16px; color: #4b5563; transition: color .3s; }
-  main p.now { color: #f9fafb; }
-  main p.done { color: #6b7280; }
+  main { height: 100%; overflow-y: auto; padding: 14px 22px 45vh; }
+  main p { font-size: 25px; line-height: 1.45; margin: 0 0 16px; color: #4b5563; }
+  main p.now { color: #9ca3af; }
+  main span.said { color: #f9fafb; }
+  main span.next { background: rgba(163, 230, 53, .18); border-radius: 3px; color: #f9fafb; }
   mark { background: #fde68a; color: #111; border-radius: 4px; padding: 0 4px; }
-  .center { flex: 1; display: grid; place-items: center; text-align: center; padding: 20px; }
+  .center { display: grid; place-items: center; text-align: center; padding: 20px; height: 100%; }
   .big { font-size: 64px; font-weight: 800; color: #a3e635; }
   .msg { font-size: 22px; color: #d1d5db; }
   footer { display: flex; gap: 8px; padding: 8px 12px; background: #111827; border-top: 1px solid #1f2937; }
@@ -33,9 +36,9 @@
 </style>
 </head>
 <body>
-<header><span id="dot" class="dot"></span><span id="seg" class="seg">Teleprompter</span><span id="state" class="state">connecting…</span></header>
+<header><span id="dot" class="dot"></span><span id="seg" class="seg">Teleprompter</span><span id="mode" class="mode">timer</span><span id="state" class="state">connecting…</span></header>
 <div class="bar"><i id="bar"></i></div>
-<div id="view" class="center"><div><div class="big">Ready?</div><p class="msg">Press <b>Start</b> when you are ready. After that you only read; everything else is automatic.</p></div></div>
+<div id="view"><div class="center"><div><div class="big">Ready?</div><p class="msg">Press <b>Start</b> when you are ready. The text follows your voice; everything else is automatic.</p></div></div></div>
 <footer>
   <button id="start" class="primary">Start recording</button>
   <button id="hold">Hold (more time)</button>
@@ -44,16 +47,95 @@
 </footer>
 <script>
   const $ = (id) => document.getElementById(id);
-  const post = (cmd) => fetch("/control?cmd=" + cmd, { method: "POST" });
-  $("start").onclick = () => post("start");
+  const post = (cmd, extra = "") => fetch("/control?cmd=" + cmd + extra, { method: "POST" }).catch(() => {});
+  $("start").onclick = () => { post("start"); listen(); };
   $("hold").onclick = () => post("hold");
   $("next").onclick = () => post("next");
   addEventListener("keydown", (e) => {
     if (e.code === "Space") { e.preventDefault(); post("hold"); }
     if (e.code === "ArrowRight") post("next");
-    if (e.code === "Enter") post("start");
+    if (e.code === "Enter") { post("start"); listen(); }
   });
-  const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/\[([^\]]+)\]/g, "<mark>[$1]</mark>");
+  const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+  // ---------- voice-follow: the text moves only as the words are actually said ----------
+  const norm = (w) => w.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const SMALL = new Set(["the", "a", "an", "and", "of", "to", "is", "in", "on", "it", "so", "as", "we", "i", "for", "with", "that", "this", "are", "be", "by", "or", "at", "my"]);
+  let words = []; // normalised script words of the current segment
+  let spans = []; // the matching <span> for each word
+  let pos = 0; // words said so far
+  let base = 0; // position where the current recognition result started
+  let voiceOn = false;
+  let lastTop = -1;
+
+  function matchFrom(start, tokens) {
+    let q = start;
+    for (const t of tokens) {
+      const n = norm(t);
+      if (!n) continue;
+      // small words only match right where we are; real words may skip a few (names, numbers said differently)
+      const reach = SMALL.has(n) ? 2 : 10;
+      for (let j = q; j < Math.min(words.length, q + reach); j++) {
+        const w = words[j];
+        if (w === n || (n.length > 3 && w.length > 3 && (w.startsWith(n) || n.startsWith(w)))) {
+          q = j + 1;
+          break;
+        }
+      }
+    }
+    return q;
+  }
+  function showPosition() {
+    spans.forEach((s, i) => (s.className = i < pos ? "said" : i === pos ? "next" : ""));
+    document.querySelectorAll("#text p").forEach((p) => p.classList.toggle("now", p.contains(spans[Math.min(pos, spans.length - 1)])));
+    const cur = spans[Math.min(pos, spans.length - 1)];
+    const box = $("text");
+    // scroll only when the reading line changes, and keep it in the upper third
+    if (cur && box && cur.offsetTop !== lastTop) {
+      lastTop = cur.offsetTop;
+      box.scrollTo({ top: Math.max(0, cur.offsetTop - box.offsetTop - box.clientHeight * 0.34), behavior: "smooth" });
+    }
+    const frac = words.length ? pos / words.length : 0;
+    $("bar").style.width = (frac * 100).toFixed(1) + "%";
+    post("progress", "&frac=" + frac.toFixed(3));
+  }
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let recog = null;
+  let wantListening = false;
+  function listen() {
+    if (!SR || recog) return;
+    wantListening = true;
+    recog = new SR();
+    recog.lang = "en-IN";
+    recog.continuous = true;
+    recog.interimResults = true;
+    recog.onstart = () => { voiceOn = true; $("mode").textContent = "follows your voice"; $("mode").className = "mode voice"; post("voice", "&on=1"); };
+    recog.onresult = (e) => {
+      if (!words.length) return;
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const r = e.results[i];
+        const q = matchFrom(base, r[0].transcript.split(/\s+/));
+        if (q > pos) { pos = q; showPosition(); }
+        if (r.isFinal) base = pos;
+      }
+    };
+    recog.onerror = (e) => {
+      if (e.error === "not-allowed" || e.error === "service-not-allowed") { wantListening = false; voiceOff(); }
+    };
+    // Chrome stops listening after a pause; keep it going for the whole recording
+    recog.onend = () => { base = pos; if (wantListening) setTimeout(() => { try { recog.start(); } catch {} }, 250); };
+    try { recog.start(); } catch { voiceOff(); }
+  }
+  function voiceOff() {
+    voiceOn = false;
+    $("mode").textContent = "timer (no voice)";
+    $("mode").className = "mode";
+    post("voice", "&on=0");
+  }
+  if (!SR) voiceOff();
+
+  // ---------- state from the autopilot ----------
   let shownSeg = null;
   const es = new EventSource("/events");
   es.onmessage = (ev) => {
@@ -65,37 +147,41 @@
     if (s.seg) $("seg").textContent = `${s.seg.n}/${s.total} · ${s.seg.title}`;
     if (s.phase === "ready" || s.phase === "finished" || s.phase === "countdown") {
       shownSeg = null;
+      if (s.phase === "finished") wantListening = false;
       const big = s.phase === "countdown" ? s.count : s.phase === "finished" ? "Done!" : "Ready?";
-      const msg = s.phase === "countdown" ? `Next: ${s.seg.title}. Get ready to read.` : s.phase === "finished" ? (s.message || "Recording finished.") : "Press Start when you are ready. After that you only read; everything else is automatic.";
-      $("view").className = "center";
-      $("view").innerHTML = `<div><div class="big">${big}</div><p class="msg">${esc(msg)}</p></div>`;
+      const msg = s.phase === "countdown" ? `Next: ${s.seg.title}. Get ready to read.` : s.phase === "finished" ? s.message || "Recording finished." : "Press Start when you are ready. The text follows your voice; everything else is automatic.";
+      $("view").innerHTML = `<div class="center"><div><div class="big">${big}</div><p class="msg">${esc(msg)}</p></div></div>`;
       $("state").textContent = s.phase === "countdown" ? "recording paused" : s.phase;
       $("bar").style.width = s.phase === "finished" ? "100%" : "0";
       return;
     }
     if (s.phase === "preparing") { $("state").textContent = "setting up the next demo…"; return; }
     if (shownSeg !== s.seg.n) {
+      // new segment: lay the words out as spans so each can light up as it is said
       shownSeg = s.seg.n;
-      $("view").className = "";
-      $("view").innerHTML = "<main id='text'>" + s.seg.say.map((p) => `<p>${esc(p)}</p>`).join("") + "</main>";
+      words = [];
+      spans = [];
+      pos = 0;
+      base = 0;
+      lastTop = -1;
+      const html = s.seg.say.map((p) => "<p>" + p.split(/\s+/).map((w) => {
+        const i = words.length;
+        words.push(norm(w));
+        const shown = esc(w).replace(/\[([^\]]+)\]/g, "<mark>[$1]</mark>");
+        return `<span data-i="${i}">${shown}</span>`;
+      }).join(" ") + "</p>").join("");
+      $("view").innerHTML = "<main id='text'>" + html + "</main>";
+      spans = [...document.querySelectorAll("#text span[data-i]")];
+      showPosition();
     }
-    // highlight the paragraph that matches the elapsed share of the speaking time
-    const frac = Math.min(1, s.elapsed / s.speechMs);
-    $("bar").style.width = (frac * 100).toFixed(1) + "%";
-    const ps = [...document.querySelectorAll("#text p")];
-    let acc = 0, now = ps.length - 1;
-    for (let i = 0; i < s.weights.length; i++) { acc += s.weights[i]; if (frac < acc) { now = i; break; } }
-    ps.forEach((p, i) => (p.className = i < now ? "done" : i === now ? "now" : ""));
-    const cur = ps[now];
-    // scroll only the text area (scrollIntoView would also scroll the page and hide the header and buttons)
-    if (cur && cur.dataset.on !== "1") {
-      ps.forEach((p) => (p.dataset.on = ""));
-      cur.dataset.on = "1";
-      const box = document.getElementById("text");
-      box.scrollTo({ top: cur.offsetTop - box.offsetTop - 10, behavior: "smooth" });
+    if (!voiceOn) {
+      // fallback: follow the clock, slower than a normal reading pace
+      const frac = Math.min(1, s.elapsed / s.speechMs);
+      const target = Math.floor(frac * words.length);
+      if (target > pos) { pos = target; showPosition(); }
     }
-    const left = Math.max(0, Math.ceil((s.speechMs - s.elapsed) / 1000));
-    $("state").textContent = s.hold ? "● holding" : left > 0 ? `● ${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")} left` : s.demoDone ? "finishing…" : "demo still running…";
+    const said = words.length ? Math.round((pos / words.length) * 100) : 0;
+    $("state").textContent = s.hold ? "● holding" : voiceOn ? (s.readDone ? (s.demoDone ? "finishing…" : "demo still running…") : `● ${said}% read`) : `● ${Math.max(0, Math.ceil((s.speechMs - s.elapsed) / 1000))} s left`;
   };
   es.onerror = () => ($("state").textContent = "reconnecting…");
 </script>

@@ -524,7 +524,7 @@ const DEMOS = {
 // A tiny local server feeds the teleprompter page live (server-sent events);
 // its buttons post back here. The window is titled "Teleprompter", so OBS's
 // title-matched capture never records it.
-const prompter = { clients: new Set(), state: { phase: "ready", total: 0 }, cmd: { hold: false, next: false } };
+const prompter = { clients: new Set(), state: { phase: "ready", total: 0 }, cmd: { hold: false, next: false, voice: false, frac: 0 } };
 function publish(patch) {
   Object.assign(prompter.state, patch);
   const msg = `data: ${JSON.stringify(prompter.state)}\n\n`;
@@ -546,6 +546,9 @@ function startPrompterServer() {
       if (cmd === "start") startPressed();
       if (cmd === "hold") prompter.cmd.hold = !prompter.cmd.hold;
       if (cmd === "next") prompter.cmd.next = true;
+      // voice-follow: the teleprompter reports how much of the segment has been said
+      if (cmd === "voice") prompter.cmd.voice = url.searchParams.get("on") === "1";
+      if (cmd === "progress") prompter.cmd.frac = Number(url.searchParams.get("frac")) || 0;
       res.end("ok");
     } else {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
@@ -566,7 +569,7 @@ function launchPrompter(port) {
   const profile = join(ROOT, "tools", "video", ".prompter-profile");
   mkdirSync(profile, { recursive: true });
   // top centre of the screen, right under the webcam, so your eyes stay near the camera
-  const proc = spawn(CHROME, [`--user-data-dir=${profile}`, "--no-first-run", "--no-default-browser-check", "--window-size=860,330", "--window-position=210,0", `--app=http://127.0.0.1:${port}/`], { stdio: "ignore" });
+  const proc = spawn(CHROME, [`--user-data-dir=${profile}`, "--no-first-run", "--no-default-browser-check", "--window-size=860,330", "--window-position=210,0", "--use-fake-ui-for-media-stream", `--app=http://127.0.0.1:${port}/`], { stdio: "ignore" });
   // keep it above the full-screen browser and Wireshark
   setTimeout(() => spawn("powershell", ["-NoProfile", "-Command", TOPMOST_PS], { stdio: "ignore" }), 1500);
   return proc;
@@ -627,6 +630,7 @@ async function main() {
       console.log(`${C.lime}● recording segment ${seg.n} · ${seg.title}${C.r}`);
       prompter.cmd.hold = false;
       prompter.cmd.next = false;
+      prompter.cmd.frac = 0;
       let demoDone = false;
       demo
         .run(h, page)
@@ -635,16 +639,19 @@ async function main() {
       let elapsed = 0;
       let last = Date.now();
       publish({ phase: "recording", seg, ...plan, elapsed, hold: false, demoDone });
-      // The segment ends once the reading time is up (or Next is pressed) and the demo has finished.
+      // The segment ends once its lines have been said (voice-follow) or, without voice, a slow
+      // reading time has passed; never before the demo has finished. Next ends it early.
       for (;;) {
         await sleep(250);
         const now = Date.now();
         if (!prompter.cmd.hold) elapsed += now - last;
         last = now;
-        publish({ elapsed, hold: prompter.cmd.hold, demoDone });
-        if (demoDone && (prompter.cmd.next || (elapsed >= plan.speechMs && !prompter.cmd.hold))) break;
+        const readDone = prompter.cmd.voice ? prompter.cmd.frac >= 0.9 : elapsed >= plan.speechMs * 1.3;
+        publish({ elapsed, hold: prompter.cmd.hold, demoDone, readDone, speechMs: Math.round(plan.speechMs * (prompter.cmd.voice ? 1 : 1.3)) });
+        if (demoDone && (prompter.cmd.next || (readDone && !prompter.cmd.hold))) break;
       }
-      await sleep(DRY ? 0 : 900); // a breath before the cut
+      await sleep(DRY ? 0 : 1200); // let the last words finish
+      await sleep(DRY ? 0 : 400); // a breath before the cut
       if (SHOTS) {
         mkdirSync(SHOTS, { recursive: true });
         const { result } = await page.send("Page.captureScreenshot", { format: "png" });

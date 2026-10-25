@@ -65,7 +65,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><title>${esc(VIDE
 <ol class="steps">
   <li>Open <b>OBS Studio</b> once and leave it open. The autopilot creates its scenes and starts, pauses and stops the recording by itself.</li>
   <li>In a terminal in the project folder, run <code>npm run video</code>. The website opens full-screen and a <b>Teleprompter</b> window appears at the top of the screen, under your webcam.</li>
-  <li>Click <b>Start recording</b> in the teleprompter. From then on you only read: the highlighted paragraph is the one to say now, the bar shows your progress, and each segment moves on by itself after a 3-2-1 countdown.</li>
+  <li>Click <b>Start recording</b> in the teleprompter. From then on you only read. The text <b>follows your voice</b>: words you have said turn bright, the next word is highlighted, and it scrolls only when you reach the next line. A segment moves on (after a 3-2-1 countdown) only once you have said its last lines and the demo has finished. The label at the top says <i>follows your voice</i>; if it says <i>timer</i>, voice-follow is unavailable (it needs internet) and a slow timer is used instead.</li>
   <li>Need more time? Press <b>Hold</b> (or Space) and press it again when ready. Finished early? Press <b>Next</b> (or the right arrow key).</li>
   <li>After segment 8 the recording stops and the teleprompter shows where the video is saved. Upload it to YouTube as <b>Unlisted</b>.</li>
 </ol>
