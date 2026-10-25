@@ -595,10 +595,27 @@ const TOPMOST_PS = [
   "}",
 ].join(" ");
 function launchPrompter(port) {
-  const profile = join(ROOT, "tools", "video", ".prompter-profile");
-  mkdirSync(profile, { recursive: true });
-  // top centre of the screen, right under the webcam, so your eyes stay near the camera
-  const proc = spawn(CHROME, [`--user-data-dir=${profile}`, "--no-first-run", "--no-default-browser-check", "--window-size=860,330", "--window-position=210,0", "--use-fake-ui-for-media-stream", `--app=http://127.0.0.1:${port}/`], { stdio: "ignore" });
+  // A fresh profile each run (old windows are never restored); top centre of the screen,
+  // right under the webcam, so your eyes stay near the camera.
+  const profile = mkdtempSync(join(tmpdir(), "rr-prompter-"));
+  const debug = 9900 + Math.floor(Math.random() * 90);
+  const proc = spawn(CHROME, [`--user-data-dir=${profile}`, `--remote-debugging-port=${debug}`, "--no-first-run", "--no-default-browser-check", "--window-size=860,330", "--window-position=210,0", `--app=http://127.0.0.1:${port}/`], { stdio: "ignore" });
+  // Allow the microphone for the teleprompter page (voice-follow) without a prompt or a warning bar.
+  (async () => {
+    for (let i = 0; i < 40; i++) {
+      try {
+        const { webSocketDebuggerUrl } = await (await fetch(`http://127.0.0.1:${debug}/json/version`)).json();
+        const ws = new WebSocket(webSocketDebuggerUrl);
+        await new Promise((r) => ws.addEventListener("open", r, { once: true }));
+        ws.send(JSON.stringify({ id: 1, method: "Browser.grantPermissions", params: { origin: `http://127.0.0.1:${port}`, permissions: ["audioCapture"] } }));
+        await sleep(300);
+        ws.close();
+        return;
+      } catch {
+        await sleep(250);
+      }
+    }
+  })();
   // keep it above the full-screen browser and Wireshark
   setTimeout(() => spawn("powershell", ["-NoProfile", "-Command", TOPMOST_PS], { stdio: "ignore" }), 1500);
   return proc;
