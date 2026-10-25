@@ -46,7 +46,7 @@ def quantile(xs: list[float], q: float) -> float:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--objects", type=int, nargs="+", default=[1, 5, 10, 20, 40])
-    ap.add_argument("--rtt", type=float, nargs="+", default=[0, 50], help="ms; 0 = plain loopback, >0 = emulated via relay")
+    ap.add_argument("--rtt", type=float, nargs="+", default=[0, 10, 50, 100], help="ms; 0 = plain loopback, >0 = emulated via relay")
     ap.add_argument("--reps", type=int, default=5)
     ap.add_argument("--no-capture", action="store_true")
     a = ap.parse_args()

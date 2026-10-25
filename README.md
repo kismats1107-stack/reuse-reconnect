@@ -25,6 +25,7 @@ npm run dev          # http://localhost:5180
 npm test             # Vitest: model, narration, challenges
 npm run lint
 npm run build        # static site in dist/ (npm run preview to check it)
+npm run report       # docs/Technical-Report.pdf from evidence/ and docs/report-img/
 ```
 
 ## Deploy
