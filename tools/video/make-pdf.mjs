@@ -61,14 +61,15 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><title>${esc(VIDE
   <b>Presenter</b><span><mark>[your name]</mark> · student ID <mark>[your ID]</mark></span>
 </div>
 
-<h2>How to record (the autopilot does the clicking)</h2>
+<h2>How to record (hands-free: you only read)</h2>
 <ol class="steps">
-  <li>Open <b>OBS Studio</b>. Leave it open; the autopilot creates its scenes and starts, pauses and stops the recording by itself.</li>
-  <li>In a terminal in the project folder, run <code>npm run video</code>. A Chrome window opens full-screen; OBS records only that window (and Wireshark in segment 6), never the terminal.</li>
-  <li>The terminal shows the lines for the next segment. Press <b>Enter</b>, then read them while the autopilot does the clicking. When you finish the segment, press <b>Enter</b> again: recording pauses until you are ready for the next one.</li>
-  <li>After segment 8 the recording stops and the terminal prints where the video file is saved. Upload it to YouTube as <b>Unlisted</b>.</li>
+  <li>Open <b>OBS Studio</b> once and leave it open. The autopilot creates its scenes and starts, pauses and stops the recording by itself.</li>
+  <li>In a terminal in the project folder, run <code>npm run video</code>. The website opens full-screen and a <b>Teleprompter</b> window appears at the top of the screen, under your webcam.</li>
+  <li>Click <b>Start recording</b> in the teleprompter. From then on you only read: the highlighted paragraph is the one to say now, the bar shows your progress, and each segment moves on by itself after a 3-2-1 countdown.</li>
+  <li>Need more time? Press <b>Hold</b> (or Space) and press it again when ready. Finished early? Press <b>Next</b> (or the right arrow key).</li>
+  <li>After segment 8 the recording stops and the teleprompter shows where the video is saved. Upload it to YouTube as <b>Unlisted</b>.</li>
 </ol>
-<div class="note">Speak slowly and clearly: about 2 words per second. Pauses are fine; recording is paused between segments, so the final video has no dead air. Fill in the <mark>[highlighted]</mark> words before you start.</div>
+<div class="note"><b>The teleprompter, this PDF and the terminal are never recorded.</b> OBS records only the website window (and Wireshark in segment 6), plus your face-cam in the bottom-right corner. Speak calmly, about 2 words per second. Fill in the <mark>[highlighted]</mark> words first.</div>
 
 <h2>Rubric coverage (20 marks)</h2>
 <table><tr><th>Criterion</th><th class="num">Marks</th><th>Where the video earns it</th></tr>

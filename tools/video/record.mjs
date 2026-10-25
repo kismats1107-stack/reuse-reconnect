@@ -1,14 +1,16 @@
 // Recording autopilot for the project video.
 //
-//   node tools/video/record.mjs              live site, OBS records, Enter between segments
-//   node tools/video/record.mjs --from 4     start at segment 4
+//   node tools/video/record.mjs              hands-free: teleprompter window, segments advance by themselves
+//   node tools/video/record.mjs --manual     terminal teleprompter, Enter between segments
+//   node tools/video/record.mjs --from 4     start at segment 4 (--to 6 stops after segment 6)
 //   node tools/video/record.mjs --url http://localhost:5180/
 //   node tools/video/record.mjs --dry-run    no OBS, no Enter: just run every demo once
 //   node tools/video/record.mjs --obs-check  connect to OBS, create the scenes, report, exit
 //   node tools/video/record.mjs --no-cam     record without the face-cam corner
 //
 // It opens a full-screen Chrome window on the site and does the clicking for
-// each segment of script.mjs, while this terminal shows the lines to read.
+// each segment of script.mjs. A separate always-on-top "Teleprompter" window
+// shows the lines to read; OBS never records it (it records by window title).
 // OBS (through its WebSocket server) records only that Chrome window, and
 // Wireshark in segment 6: recording starts, pauses between segments and stops
 // at the end, so the video needs no editing.
@@ -16,6 +18,7 @@ import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+import { createServer } from "node:http";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
 import { SEGMENTS, VIDEO } from "./script.mjs";
@@ -27,6 +30,10 @@ const opt = (name, dflt) => (args.includes(name) ? args[args.indexOf(name) + 1] 
 const DRY = flag("--dry-run");
 const HEADLESS = flag("--headless");
 const FROM = Number(opt("--from", 1));
+const TO = Number(opt("--to", SEGMENTS.length));
+const MANUAL = flag("--manual");
+const PACE = Number(opt("--pace", 1)); // < 1 only to test the flow quickly
+const WORDS_PER_SEC = 2.1; // ~125 words a minute: a calm reading pace
 const SHOTS = opt("--shots", null); // folder: save a screenshot after each segment (for checking a dry run)
 const SITE = opt("--url", VIDEO.site + "/").replace(/\/?$/, "/");
 const CHROME = "C:/Program Files/Google/Chrome/Application/chrome.exe";
@@ -513,6 +520,64 @@ const DEMOS = {
   },
 };
 
+// ---------------------------------------------------------------- teleprompter window
+// A tiny local server feeds the teleprompter page live (server-sent events);
+// its buttons post back here. The window is titled "Teleprompter", so OBS's
+// title-matched capture never records it.
+const prompter = { clients: new Set(), state: { phase: "ready", total: 0 }, cmd: { hold: false, next: false } };
+function publish(patch) {
+  Object.assign(prompter.state, patch);
+  const msg = `data: ${JSON.stringify(prompter.state)}\n\n`;
+  for (const c of prompter.clients) c.write(msg);
+}
+let startPressed;
+const started = new Promise((r) => (startPressed = r));
+function startPrompterServer() {
+  const html = readFileSync(join(ROOT, "tools", "video", "teleprompter.html"));
+  const server = createServer((req, res) => {
+    const url = new URL(req.url, "http://x");
+    if (url.pathname === "/events") {
+      res.writeHead(200, { "Content-Type": "text/event-stream", "Cache-Control": "no-cache", Connection: "keep-alive" });
+      res.write(`data: ${JSON.stringify(prompter.state)}\n\n`);
+      prompter.clients.add(res);
+      req.on("close", () => prompter.clients.delete(res));
+    } else if (url.pathname === "/control" && req.method === "POST") {
+      const cmd = url.searchParams.get("cmd");
+      if (cmd === "start") startPressed();
+      if (cmd === "hold") prompter.cmd.hold = !prompter.cmd.hold;
+      if (cmd === "next") prompter.cmd.next = true;
+      res.end("ok");
+    } else {
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(html);
+    }
+  });
+  return new Promise((r) => server.listen(0, "127.0.0.1", () => r(server.address().port)));
+}
+const TOPMOST_PS = [
+  "Add-Type -TypeDefinition 'using System; using System.Runtime.InteropServices; public class W { [DllImport(\"user32.dll\")] public static extern bool SetWindowPos(IntPtr h, IntPtr a, int x, int y, int cx, int cy, uint f); }';",
+  "for ($i = 0; $i -lt 20; $i++) {",
+  "  $p = Get-Process chrome -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowTitle -eq 'Teleprompter' } | Select-Object -First 1;",
+  "  if ($p) { [W]::SetWindowPos($p.MainWindowHandle, [IntPtr](-1), 0, 0, 0, 0, 3) | Out-Null; break };",
+  "  Start-Sleep -Milliseconds 500",
+  "}",
+].join(" ");
+function launchPrompter(port) {
+  const profile = join(ROOT, "tools", "video", ".prompter-profile");
+  mkdirSync(profile, { recursive: true });
+  // top centre of the screen, right under the webcam, so your eyes stay near the camera
+  const proc = spawn(CHROME, [`--user-data-dir=${profile}`, "--no-first-run", "--no-default-browser-check", "--window-size=860,330", "--window-position=210,0", `--app=http://127.0.0.1:${port}/`], { stdio: "ignore" });
+  // keep it above the full-screen browser and Wireshark
+  setTimeout(() => spawn("powershell", ["-NoProfile", "-Command", TOPMOST_PS], { stdio: "ignore" }), 1500);
+  return proc;
+}
+const countWords = (t) => t.split(/\s+/).filter(Boolean).length;
+function speechPlan(seg) {
+  const per = seg.say.map(countWords);
+  const total = per.reduce((a, b) => a + b, 0);
+  return { speechMs: Math.round((total / WORDS_PER_SEC + 2.5) * 1000 * PACE), weights: per.map((w) => w / total) };
+}
+
 // ---------------------------------------------------------------- main
 async function main() {
   console.log(`${C.b}${C.lime}Recording autopilot · ${VIDEO.title}${C.r}`);
@@ -535,8 +600,74 @@ async function main() {
   const page = await launchChrome();
   const h = helpers(page);
   let recording = false;
+  const segs = SEGMENTS.filter((s) => s.n >= FROM && s.n <= TO);
 
-  for (const seg of SEGMENTS.filter((s) => s.n >= FROM)) {
+  if (!MANUAL) {
+    const port = await startPrompterServer();
+    publish({ phase: "ready", total: SEGMENTS.length });
+    const prompterProc = HEADLESS ? null : launchPrompter(port);
+    console.log(`${C.dim}teleprompter: http://127.0.0.1:${port}/${C.r}`);
+    console.log(`${C.lime}Teleprompter window is open (it is not recorded). Click "Start recording" in it, or press Enter here.${C.r}`);
+    await (DRY ? Promise.resolve() : Promise.race([started, enter("")]));
+    for (const seg of segs) {
+      const demo = DEMOS[seg.n];
+      const plan = speechPlan(seg);
+      publish({ phase: "preparing", seg });
+      await demo.setup(h, page);
+      for (const count of [3, 2, 1]) {
+        publish({ phase: "countdown", seg, count });
+        await sleep(DRY ? 100 : 1000);
+      }
+      if (obs) {
+        if (!recording) {
+          await obs.call("StartRecord");
+          recording = true;
+        } else await obs.call("ResumeRecord");
+      }
+      console.log(`${C.lime}● recording segment ${seg.n} · ${seg.title}${C.r}`);
+      prompter.cmd.hold = false;
+      prompter.cmd.next = false;
+      let demoDone = false;
+      demo
+        .run(h, page)
+        .catch((e) => console.log(`${C.red}demo step failed: ${e.message}${C.r}`))
+        .finally(() => (demoDone = true));
+      let elapsed = 0;
+      let last = Date.now();
+      publish({ phase: "recording", seg, ...plan, elapsed, hold: false, demoDone });
+      // The segment ends once the reading time is up (or Next is pressed) and the demo has finished.
+      for (;;) {
+        await sleep(250);
+        const now = Date.now();
+        if (!prompter.cmd.hold) elapsed += now - last;
+        last = now;
+        publish({ elapsed, hold: prompter.cmd.hold, demoDone });
+        if (demoDone && (prompter.cmd.next || (elapsed >= plan.speechMs && !prompter.cmd.hold))) break;
+      }
+      await sleep(DRY ? 0 : 900); // a breath before the cut
+      if (SHOTS) {
+        mkdirSync(SHOTS, { recursive: true });
+        const { result } = await page.send("Page.captureScreenshot", { format: "png" });
+        writeFileSync(join(SHOTS, `segment-${seg.n}.png`), Buffer.from(result.data, "base64"));
+      }
+      if (obs && seg !== segs.at(-1)) await obs.call("PauseRecord");
+      if (demo.teardown) await demo.teardown();
+    }
+    let message = "Dry run finished.";
+    if (obs && recording) {
+      const { outputPath } = await obs.call("StopRecord");
+      message = `Saved to ${outputPath}. Upload it to YouTube as Unlisted.`;
+    }
+    publish({ phase: "finished", message });
+    console.log(`\n${C.b}${C.lime}${message}${C.r}`);
+    await sleep(DRY ? 0 : 5000);
+    rl.close();
+    page.proc.kill();
+    if (prompterProc) prompterProc.kill();
+    process.exit(0);
+  }
+
+  for (const seg of segs) {
     const demo = DEMOS[seg.n];
     teleprompter(seg);
     await enter(`Press Enter to START segment ${seg.n}${recording ? " (recording resumes)" : " (recording starts)"}… `);
