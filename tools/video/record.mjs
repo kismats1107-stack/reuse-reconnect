@@ -16,7 +16,8 @@
 // at the end, so the video needs no editing.
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { createServer } from "node:http";
 import { createInterface } from "node:readline";
@@ -178,9 +179,10 @@ const scene = async (name) => obs && (await obs.call("SetCurrentProgramScene", {
 
 // ---------------------------------------------------------------- Chrome (DevTools protocol)
 async function launchChrome() {
-  const profile = join(ROOT, "tools", "video", ".chrome-profile");
-  mkdirSync(profile, { recursive: true });
-  const port = 9333;
+  // A fresh profile and port every run: Chrome then never restores old windows, and a
+  // browser left over from an earlier run can't be mistaken for this one.
+  const profile = mkdtempSync(join(tmpdir(), "rr-present-"));
+  const port = 9400 + Math.floor(Math.random() * 500);
   const flags = [
     `--remote-debugging-port=${port}`,
     `--user-data-dir=${profile}`,
@@ -197,7 +199,8 @@ async function launchChrome() {
   let page;
   for (let i = 0; i < 60 && !page; i++) {
     try {
-      page = (await (await fetch(`http://127.0.0.1:${port}/json`)).json()).find((t) => t.type === "page");
+      const pages = (await (await fetch(`http://127.0.0.1:${port}/json`)).json()).filter((t) => t.type === "page");
+      page = pages.find((t) => t.url.startsWith(SITE)) ?? pages[0];
     } catch {
       /* starting */
     }
@@ -224,8 +227,29 @@ async function launchChrome() {
     if (r.result?.exceptionDetails) throw new Error(r.result.exceptionDetails.exception?.description ?? "evaluate failed");
     return r.result?.result?.value;
   };
+  presenter = { proc, profile };
   return { proc, send, evaluate };
 }
+
+// Closes the presenter browser whatever happens (normal end, error or Ctrl+C).
+let presenter = null;
+function closePresenter() {
+  if (!presenter) return;
+  try {
+    presenter.proc.kill();
+  } catch {
+    /* already closed */
+  }
+  setTimeout(() => {
+    try {
+      rmSync(presenter.profile, { recursive: true, force: true });
+    } catch {
+      /* Chrome may still hold a file; the temp folder is cleaned up by Windows later */
+    }
+  }, 1500);
+}
+process.on("exit", closePresenter);
+process.on("SIGINT", () => process.exit(130));
 
 // ---------------------------------------------------------------- page helpers
 // A soft presenter dot shows viewers where each click happens.
@@ -265,9 +289,14 @@ function helpers(page) {
       await sleep(2500);
     },
     async scrollToText(re, offset = 90) {
-      const ok = await evaluate(`(() => { const el = [...document.querySelectorAll("h1,h2,h3,p,figcaption")].find(e => ${re}.test(e.textContent)); if (!el) return false; window.scrollTo({ top: el.getBoundingClientRect().top + scrollY - ${offset}, behavior: "smooth" }); return true; })()`);
-      if (!ok) throw new Error(`no heading ${re}`);
-      await sleep(1400);
+      // the page may still be loading or animating in: look for up to 15 s
+      for (let i = 0; i < 30; i++) {
+        const ok = await evaluate(`(() => { const el = [...document.querySelectorAll("h1,h2,h3,p,figcaption")].find(e => ${re}.test(e.textContent.trim())); if (!el) return false; window.scrollTo({ top: el.getBoundingClientRect().top + scrollY - ${offset}, behavior: "smooth" }); return true; })()`);
+        if (ok) return sleep(1400);
+        if (i === 10 && !(await evaluate(`location.href.startsWith(${JSON.stringify(SITE)}) || location.hostname === "github.com"`))) await send("Page.navigate", { url: `${SITE}#/results` });
+        await sleep(500);
+      }
+      throw new Error(`could not find "${re.source}" on the page`);
     },
     async scrollBy(dy) {
       await evaluate(`window.scrollBy({ top: ${dy}, behavior: "smooth" })`);
@@ -616,7 +645,7 @@ async function main() {
       const demo = DEMOS[seg.n];
       const plan = speechPlan(seg);
       publish({ phase: "preparing", seg });
-      await demo.setup(h, page);
+      await demo.setup(h, page).catch((e) => console.log(`${C.red}setup step failed (continuing): ${e.message}${C.r}`));
       for (const count of [3, 2, 1]) {
         publish({ phase: "countdown", seg, count });
         await sleep(DRY ? 100 : 1000);
@@ -678,7 +707,7 @@ async function main() {
     const demo = DEMOS[seg.n];
     teleprompter(seg);
     await enter(`Press Enter to START segment ${seg.n}${recording ? " (recording resumes)" : " (recording starts)"}… `);
-    await demo.setup(h, page);
+    await demo.setup(h, page).catch((e) => console.log(`${C.red}setup step failed (continuing): ${e.message}${C.r}`));
     if (obs) {
       if (!recording) {
         await obs.call("StartRecord");
